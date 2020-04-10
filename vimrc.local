@@ -1,0 +1,589 @@
+" General
+set background=dark
+filetype plugin indent on   " Automatically detect file types.
+syntax on                   " Syntax highlighting
+set mouse=a                 " Automatically enable mouse usage
+set mousehide               " Hide the mouse cursor while typing
+scriptencoding utf-8
+
+" set autowrite
+set shortmess+=filmnrxoOtT          " Abbrev. of messages (avoids 'hit enter')
+set viewoptions=folds,options,cursor,unix,slash " Better Unix / Windows compatibility
+set virtualedit=onemore             " Allow for cursor beyond last character
+set history=1000                    " Store a ton of history (default is 20)
+set spell                           " Spell checking on
+set hidden                          " Allow buffer switching without saving
+set iskeyword-=.                    " '.' is an end of word designator
+set iskeyword-=#                    " '#' is an end of word designator
+set iskeyword-=-                    " '-' is an end of word designator
+
+" UI
+colorscheme gruvbox
+let g:mapleader = ','
+set tabpagemax=20               " Only show 15 tabs
+set showmode                    " Display the current mode
+set cursorline                  " Highlight current line
+highlight clear SignColumn      " SignColumn should match background
+highlight clear LineNr          " Current line
+set backspace=indent,eol,start  " Backspace for dummies
+set linespace=0                 " No extra spaces between rows
+set number                      " Line numbers on
+set showmatch                   " Show matching brackets/parenthesis
+set incsearch                   " Find as you type search
+set hlsearch                    " Highlight search terms
+set winminheight=0              " Windows can be 0 line high
+set ignorecase                  " Case insensitive search
+set smartcase                   " Case sensitive when uc present
+set wildmenu                    " Show list instead of just completing
+set wildmode=list:longest,full  " Command <Tab> completion, list matches, then longest common part, then all.
+set whichwrap=b,s,h,l,<,>,[,]   " Backspace and cursor keys wrap too
+set scrolljump=5                " Lines to scroll when cursor leaves screen
+set scrolloff=3                 " Minimum lines to keep above and below cursor
+set foldenable                  " Auto fold code
+set list
+set listchars=tab:›\ ,trail:•,extends:#,nbsp:. " Highlight problematic whitespace
+
+" Formatting
+set nowrap                      " Do not wrap long lines
+set autoindent                  " Indent at the same level of the previous line
+set shiftwidth=4                " Use indents of 4 spaces
+set expandtab                   " Tabs are spaces, not tabs
+set tabstop=4                   " An indentation every four columns
+set softtabstop=4               " Let backspace delete indent
+set nojoinspaces                " Prevents inserting two spaces after punctuation on a join (J)
+set splitright                  " Puts new vsplit windows to the right of the current
+set splitbelow                  " Puts new split windows to the bottom of the current
+set pastetoggle=<F12>           " pastetoggle (sane indentation on pastes)
+" autocmd FileType c,cpp,java,go,php,javascript,puppet,python,rust,twig,xml,yml,perl,sql autocmd BufWritePre <buffer> if !exists('g:spf13_keep_trailing_whitespace') | call StripTrailingWhitespace() | endif
+" autocmd FileType go autocmd BufWritePre <buffer> Fmt
+" autocmd BufNewFile,BufRead *.html.twig set filetype=html.twig
+" autocmd FileType haskell,puppet,ruby,yml setlocal expandtab shiftwidth=2 softtabstop=2
+" autocmd BufNewFile,BufRead *.coffee set filetype=coffee
+" autocmd FileType haskell setlocal commentstring=--\ %s
+" autocmd FileType haskell,rust setlocal nospell
+
+" Code folding options
+nmap <leader>f0 :set foldlevel=0<CR>
+nmap <leader>f1 :set foldlevel=1<CR>
+nmap <leader>f2 :set foldlevel=2<CR>
+nmap <leader>f3 :set foldlevel=3<CR>
+nmap <leader>f4 :set foldlevel=4<CR>
+nmap <leader>f5 :set foldlevel=5<CR>
+nmap <leader>f6 :set foldlevel=6<CR>
+nmap <leader>f7 :set foldlevel=7<CR>
+nmap <leader>f8 :set foldlevel=8<CR>
+nmap <leader>f9 :set foldlevel=9<CR>
+
+" basic
+set hls
+set tw=80
+set rnu
+set cindent
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+set expandtab
+set cursorline
+set noswapfile
+" set cursorcolumn
+set nocompatible
+set completeopt=longest,menu
+set foldmethod=syntax
+" nnoremap <space> @=((foldclosed(line( '.' )) < 0)? 'zc' : 'zo')<CR>
+set foldlevelstart=99
+inoremap <C-l> <Esc>o
+inoremap <C-z> <ESC>ddk$a
+inoremap <c-b> <ESC>ui
+map <c-_> <ESC><C-r>i
+inoremap <c-g> <ESC>Bi
+inoremap <c-k> <ESC>lWi
+nnoremap <Silent><Leader>q gwip
+nnoremap <Leader>\ :w<CR>i
+inoremap <c-f> <c-x><c-f>
+
+nnoremap <silent><c-l> <c-w>l
+nnoremap <silent><c-h> <c-w>h
+nnoremap <silent><c-j> <c-w>j
+nnoremap <silent><c-k> <c-w>k
+
+" buffer switch
+nnoremap <Leader>bn :bn<CR>
+nnoremap <Leader>bp :bp<CR>
+nnoremap <Leader>bd :bd<Space>
+nnoremap <Leader>bc :bd<CR>
+nnoremap <Leader>bl :blast<CR>
+nnoremap <Leader>bf :bfirst<CR>
+nnoremap <Leader>bb :Buffers<CR>
+nnoremap <Leader>r  :!<Space>
+nnoremap <Leader>rr :AsyncRun -raw<Space>
+nnoremap <Leader>b0 :buffers<CR>:bb<Space>
+nnoremap <Leader>b1 :b1<CR>
+nnoremap <Leader>b2 :b2<CR>
+nnoremap <Leader>b3 :b3<CR>
+nnoremap <Leader>b4 :b4<CR>
+nnoremap <Leader>b5 :b5<CR>
+nnoremap <Leader>b6 :b6<CR>
+nnoremap <Leader>b7 :b7<CR>
+nnoremap <Leader>b8 :b8<CR>
+nnoremap <Leader>b9 :b9<CR>
+
+" tab swtich
+set showtabline=1
+nnoremap <Leader>te :tabedit<Space>
+nnoremap <Leader>tN :tabnew<CR>
+nnoremap <Leader>ts :tabs<CR>
+nnoremap <Leader>tn :tabnext<CR>
+nnoremap <Leader>tp :tabNext<CR>
+nnoremap <Leader>tf :tabfirst<CR>
+nnoremap <Leader>tl :tablast<CR>
+nnoremap <Leader>tc :tabclose<CR>
+nnoremap <Leader>to :tabo<CR>
+nnoremap <Leader>tm :tabmove<Space>
+nnoremap <Leader>tdo :tabdo<Space>
+nnoremap <Leader>tp : tab split<CR>
+nnoremap <Leader>tw :e<Space>
+nnoremap <Leader>ts :sp<Space>
+nnoremap <Leader>tv :vsp<Space>
+nnoremap <Leader>1 1gt
+nnoremap <Leader>2 2gt
+nnoremap <Leader>3 3gt
+nnoremap <Leader>4 4gt
+nnoremap <Leader>5 5gt
+nnoremap <Leader>6 6gt
+nnoremap <Leader>7 7gt
+nnoremap <Leader>8 8gt
+nnoremap <Leader>9 9gt
+let g:pymode_python = 'python3'
+
+" 远程vim与tmux联动的响应延迟
+"if $TMUX != ''
+"set ttimeoutlen=20
+"elseif &ttimeoutlen > 60 || &ttimeoutlen <= 0
+"set ttimeoutlen=60
+"endif
+
+" PlugInstall ------------------------------------
+
+" rainbow
+let g:rainbow_active = 1
+
+" tarbar
+let g:tagbar_width = 40
+let g:tagbar_autopreview = 1
+" let g:tagbar_left = 1
+let g:tagbar_vertical = 0
+let g:tagbar_sort = 0
+let g:tagbar_compact = 1
+nnoremap <Leader>tt :TagbarToggle<CR>
+
+" nerdtree
+map <C-e> :NERDTreeTabsToggle<CR>
+"map <leader>e :NERDTreeFind<CR>
+"nmap <leader>nt :NERDTreeFind<CR>
+let NERDTreeShowBookmarks=1
+let NERDTreeIgnore=['\.py[cd]$', '\~$', '\.swo$', '\.swp$', '^\.git$', '^\.hg$', '^\.svn$', '\.bzr$']
+let NERDTreeChDirMode=0
+let NERDTreeQuitOnOpen=1
+let NERDTreeMouseMode=2
+let NERDTreeShowHidden=1
+let NERDTreeKeepTreeInNewTab=1
+let g:nerdtree_tabs_open_on_gui_startup=0
+" 打开vim如果没有文件自动打开nerdtree
+autocmd vimenter * if !argc()|NERDTree|endif
+" 当nerdtree为最后窗口时自动关闭
+"autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+" nerdtree自动查找并选择当前打开的文件
+let g:nerdtree_tabs_autofind = 1
+let g:nerdtree_tabs_focus_on_files = 1
+" nerdtree中显示git信息
+let g:NERDTreeIndicatorMapCustom = {
+            \ "Modified"  : "✹",
+            \ "Staged"    : "✚",
+            \ "Untracked" : "✭",
+            \ "Renamed"   : "➜",
+            \ "Unmerged"  : "═",
+            \ "Deleted"   : "✖",
+            \ "Dirty"     : "✗",
+            \ "Clean"     : "✔︎",
+            \ "Unknown"   : "?"
+            \ }
+
+" autoformat
+" noremap <F6> :Autoformat<CR>
+" let g:autoformat_verbosemode = 1
+" "g:formatdef_clangformat
+
+" nerdcommenter
+" easymotion
+
+" auto-pairs
+" default
+let g:AutoPairsFlyMode = 0
+let g:AutoPairsShortcutBackInsert = '<M-b>'
+
+" undotree
+set backup
+set undofile
+set undolevels=10000
+set undoreload=10000
+nnoremap <Leader>nu :UndotreeToggle<CR>
+let g:undotree_SetFocusWhenToggle=1
+
+" ctags
+set tags=./.tags;,.tags
+" spf13
+" set tags=./tags;/,~/.vimtags
+" Make tags placed in .git/tags file available in all levels of a repository
+" let gitroot = substitute(system('git rev-parse --show-toplevel'), '[\n\r]', '', 'g')
+" if gitroot != ''
+"     let &tags = &tags . ',' . gitroot . '/.git/tags'
+" endif
+
+" tabular
+nmap <Leader>a& :Tabularize /&<CR>
+vmap <Leader>a& :Tabularize /&<CR>
+nmap <Leader>a= :Tabularize /^[^=]*\zs=<CR>
+vmap <Leader>a= :Tabularize /^[^=]*\zs=<CR>
+nmap <Leader>a=> :Tabularize /=><CR>
+vmap <Leader>a=> :Tabularize /=><CR>
+nmap <Leader>a: :Tabularize /:<CR>
+vmap <Leader>a: :Tabularize /:<CR>
+nmap <Leader>a:: :Tabularize /:\zs<CR>
+vmap <Leader>a:: :Tabularize /:\zs<CR>
+nmap <Leader>a, :Tabularize /,<CR>
+vmap <Leader>a, :Tabularize /,<CR>
+nmap <Leader>a,, :Tabularize /,\zs<CR>
+vmap <Leader>a,, :Tabularize /,\zs<CR>
+nmap <Leader>a<Bar> :Tabularize /<Bar><CR>
+vmap <Leader>a<Bar> :Tabularize /<Bar><CR>
+nmap <Leader>a<Space> :Taularize <Space><Bar><CR>
+
+" fugitive
+nnoremap <silent> <leader>gs :Gstatus<CR>
+nnoremap <silent> <leader>gd :Gdiff<CR>
+nnoremap <silent> <leader>gc :Gcommit<CR>
+nnoremap <silent> <leader>gb :Gblame<CR>
+nnoremap <silent> <leader>gl :Glog<CR>
+nnoremap <silent> <leader>gp :Git push<CR>
+nnoremap <silent> <leader>gr :Gread<CR>
+nnoremap <silent> <leader>gw :Gwrite<CR>
+nnoremap <silent> <leader>ge :Gedit<CR>
+" Mnemonic _i_nteractive
+nnoremap <silent> <leader>gi :Git add -p %<CR>
+nnoremap <silent> <leader>gg :SignifyToggle<CR>
+
+" airline
+let g:airline_powerline_fonts = 1
+if !exists('g:airline_symbols')
+    let g:airline_symbols = {}
+endif
+set t_Co=256
+"let g:airline_theme="jellybeans"
+"let g:airline_theme="serene"
+let g:airline_theme="qwq"
+"let g:iarline_theme="simple"
+let g:airline#extensions#tabline#enabled = 1
+"let g:airline_left_sep = '▶'
+"let g:airline_left_alt_sep = '❯'
+"let g:airline_right_sep = '◀'
+"let g:airline_right_alt_sep = '❮'
+" Powerline symbols: unicode
+let g:airline_left_sep = '»'
+let g:airline_left_sep = '▶'
+let g:airline_right_sep = '«'
+let g:airline_right_sep = '◀'
+let g:airline_symbols.linenr = '␊'
+let g:airline_symbols.linenr = '␤'
+let g:airline_symbols.linenr = '¶'
+let g:airline_symbols.branch = '⎇'
+let g:airline_symbols.paste = 'ρ'
+let g:airline_symbols.paste = 'Þ'
+let g:airline_symbols.paste = '∥'
+let g:airline_symbols.whitespace = 'Ξ'
+" Powerline symbols: powerline fonts
+let irline_left_sep = ''
+let g:airline_left_alt_sep = ''
+let g:airline_right_sep = ''
+let g:airline_right_alt_sep = ''
+let g:airline_symbols.branch = ''
+let g:airline_symbols.readonly = ''
+let g:airline_symbols.linenr = ''
+
+" indent_guides
+"let g:indent_guides_enable_on_vim_startup=1
+"let g:indent_guides_start_level=2
+"let g:indent_guides_guide_size=1
+":nmap <silent> <Leader>i <Plug>IndentGuidesToggle
+
+" SnipMate
+let g:snipMate = get(g:, 'snipMate', {}) " Allow for vimrc re-sourcing
+let g:snipMate.scope_aliases = {}
+let g:snipMate.scope_aliases['ruby'] = 'ruby,rails'
+" ??
+" Setting the author var. If forking, please overwrite in your .vimrc.local file
+" let g:snips_author = 'Steve Francia <steve.francia@gmail.com>'
+" Snippets'
+let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
+let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
+"let g:SuperTabDefaultCompletionType = '<C-n>'
+
+" 语法高亮
+" vim-cpp-enhanced-hightlight
+" POSIX功能突出显示
+let g:cpp_posix_standard = 1
+" 模板功能突出显示
+let g:cpp_experimental_simple_template_highlight = 1
+" 声明类名显示高亮
+let g:cpp_class_decl_highlight = 1
+" 不突出显示类的范围
+let g:cpp_class_scope_highlight = 1
+" 库的突出显示
+let g:cpp_concepts_highlight = 1
+" 禁止显示用户定义的功能
+"let g:cpp_no_function_highlight = 1
+
+" gutentags
+" gutentags 搜索工程目录的标志，碰到这些文件/目录名就停止向上一级目录递归
+let g:gutentags_project_root = ['.root', '.svn', '.git', '.hg', '.project']
+" 所生成的数据文件的名称
+let g:gutentags_ctags_tagfile = '.tags'
+" 将自动生成的 tags 文件全部放入 ~/.cache/tags 目录中，避免污染工程目录
+let s:vim_tags = expand('~/.cache/tags')
+let g:gutentags_cache_dir = s:vim_tags
+" 配置 ctags 的参数
+let g:gutentags_ctags_extra_args = ['--fields=+niazS', '--extra=+q']
+let g:gutentags_ctags_extra_args += ['--c++-kinds=+px']
+let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
+" 检测 ~/.cache/tags 不存在就新建
+if !isdirectory(s:vim_tags)
+    silent! call mkdir(s:vim_tags, 'p')
+endif
+
+" AsyncRun
+" terminal mode: tab/curwin/top/bottom/left/right/quickfix/external
+let g:asynctasks_term_pos = 'quickfix'
+" 自动打开quickfix window
+let g:asyncrun_open = 10
+let g:asyncrun_bell = 1
+let g:asynctasks_term_rows = 20
+let g:asynctasks_term_cols = 30
+" nnoremap <silent> <F5> :call asyncrun#quickfix_toggle(6)<CR>
+" 向上递归，遇到以下文件则视为项目目录
+let g:asyncrun_rootmarks = ['.svn', '.git', '.root', '_darcs', 'build.xml']
+" 在项目主目录生成.tags
+" ctags -R --c++-kinds=+p --fields=+iaS --extras=+q --output-format=e-ctags -f ./.tags
+" set tags=./.tags;,.tags
+nnoremap <silent><Leader>ri :AsyncRun -raw ctags -R --c++-kinds=+p --fields=+iaS --extras=+q --output-format=e-ctags -f "$(VIM_ROOT)/.tags" <CR>
+map <F10> <Leader>ri<C-W><C-]><F5>
+" 单文件编译运行
+nnoremap <silent><Leader>mr :AsyncRun -raw "$(VIM_FILEDIR)/$(VIM_FILENOEXT)"<CR>
+nnoremap <Leader>md :AsyncRun -raw rm -f "$(VIM_FILEDIR)/$(VIM_FILENOEXT)"<CR>
+nnoremap <Leader>msb :AsyncRun -raw gcc -Wall -O4 "$(VIM_FILEPATH)" -o "$(VIM_FILEDIR)/$(VIM_FILENOEXT)"<CR>
+nnoremap <Leader>msd :AsyncRun -raw gcc -Wall -g "$(VIM_FILEPATH)" -o "$(VIM_FILEDIR)/$(VIM_FILENOEXT)"<CR>
+nnoremap <Leader>mmb :AsyncRun -raw g++ -std=c++14 -Wall -O4 "$(VIM_FILEPATH)" -o "$(VIM_FILEDIR)/$(VIM_FILENOEXT)"<CR>
+nnoremap <Leader>mmd :AsyncRun -raw g++ -std=c++14 -Wall -g "$(VIM_FILEPATH)" -o "$(VIM_FILEDIR)/$(VIM_FILENOEXT)"<CR>
+" 项目文件编译运行
+nnoremap <silent><Leader>mcc :AsyncRun -raw -cwd="$(VIM_ROOT)" cmake -B "$(VIM_ROOT)/build/" . <CR>
+" 可以是make run，要先cmake配置add_custom_target
+nnoremap <silent><Leader>mca :AsyncRun -raw -cwd="$(VIM_ROOT)" make -C "$(VIM_ROOT)/build/" <CR>
+nnoremap <silent><Leader>mcb :AsyncRun -raw -cwd="$(VIM_ROOT)" make -C "$(VIM_ROOT)/build/" "$(VIM_FILENOEXT)" <CR>
+nnoremap <silent><Leader>mct :AsyncRun -raw -cwd="$(VIM_ROOT)" make -C "$(VIM_ROOT)/build/" test <CR>
+nnoremap <Leader>mcd :AsyncRun -raw -cwd="$(VIM_ROOT)" make -C "$(VIM_ROOT)/build/" clean <CR>
+
+" doxygen
+let g:DoxygenToolkit_briefTag_pre="@brief  "
+let g:DoxygenToolkit_paramTag_pre="@param  "
+let g:DoxygenToolkit_returnTag="@return   "
+let g:DoxygenToolkit_blockHeader="--------------------------------------------------------------------------"
+let g:DoxygenToolkit_blockFooter="----------------------------------------------------------------------------"
+let g:DoxygenToolkit_authorName="Ichheit, 13660591402@163.com"
+let s:licenseTag="\<enter>"
+let s:licenseTag = s:licenseTag . "Copyright (C) 2020 ...\<enter>"
+let s:licenseTag = s:licenseTag . "For free\<enter>"
+let s:licenseTag = s:licenseTag . "All right reserved"
+let g:DoxygenToolkit_licenseTag=s:licenseTag
+let g:DoxygenToolkit_briefTag_funcName="yes"
+let g:doxygen_enhanced_color=1
+nnoremap <Leader>za :DoxAuthor<CR>
+nnoremap <Leader>zf :Dox<CR>
+nnoremap <Leader>zl :DoxLic<CR>
+
+" ale
+" let g:ale_linters_explicit = 1
+let g:ale_completion_delay = 500
+let g:ale_echo_delay = 20
+let g:ale_lint_delay = 500
+let g:ale_echo_msg_format = '[%linter%] %code: %%s'
+let g:ale_lint_on_text_changed = 'normal'
+let g:ale_lint_on_insert_leave = 1
+let g:airline#extensions#ale#enabled = 1
+let g:ale_c_gcc_options = '-Wall -O2 -std=c99'
+let g:ale_cpp_gcc_options = '-Wall -O2 -std=c++14'
+let g:ale_c_cppcheck_options = ''
+let g:ale_cpp_cppcheck_options = ''
+" 使用clang对c和c++进行语法检查，对python使用pylint进行语法检查
+let g:ale_linters = {
+            \   'c++': ['clang'],
+            \   'c': ['clang'],
+            \   'python': ['pylint'],
+            \}
+
+" echodoc
+" set noshowmode
+" let g:echodoc#type = "echo" " Default value
+" let g:echodoc_enable_at_startup = 1
+let g:echodoc#enable_at_startup = 1
+let g:echodoc#type = 'popup'
+set cmdheight=1
+highlight link EchoDocPopup Pmenu
+
+
+" LeaderF
+let g:Lf_HideHelp = 1
+let g:Lf_UseCache = 0
+let g:Lf_UseVersionControlTool = 0
+let g:Lf_IgnoreCurrentBufferName = 1
+let g:Lf_RootMarkers = ['.project', '.root', '.svn', '.git', '.hg']
+let g:Lf_WorkingDirectoryMode = 'Ac'
+let g:Lf_WindowHeight = 0.30
+let g:Lf_CacheDirectory = expand('~/.vim/cache')
+let g:Lf_ShowRelativePath = 0
+let g:Lf_StlColorscheme = 'powerline'
+" let g:Lf_WindowPosition = 'popup'
+let g:Lf_PreviewInPopup = 1
+let g:Lf_StlSeparator = { 'left': "\ue0b0", 'right': "\ue0b2", 'font': "DejaVu Sans Mono for Powerline" }
+let g:Lf_PreviewResult = {'Function': 0, 'BufTag': 0 }
+
+let g:Lf_ShortcutF = '<Leader>ll'
+noremap <Leader>lb :<C-U><C-R>=printf("Leaderf buffer %s", "")<CR><CR>
+noremap <Leader>lm :<C-U><C-R>=printf("Leaderf mru %s", "")<CR><CR>
+noremap <Leader>lt :<C-U><C-R>=printf("Leaderf bufTag %s", "")<CR><CR>
+noremap <Leader>la :<C-U><C-R>=printf("Leaderf line %s", "")<CR><CR>
+noremap <Leader>lw :<C-U><C-R>=printf("Leaderf window %s", "")<CR><CR>
+noremap <Leader>lf :<C-U><C-R>=printf("Leaderf! function %s", "")<CR><CR>
+noremap <Leader>lff :<C-U><C-R>=printf("Leaderf function %s", "")<CR><CR>
+xnoremap gf :<C-U><C-R>=printf("Leaderf! rg -f -e %s ", leaderf#Rg#visual())<CR>
+noremap go :<C-U>Leaderf! rg --recall<CR>
+noremap <C-B> :<C-U><C-R>=printf("Leaderf! rg --current-buffer -e %s ", expand("<cword>"))<CR><CR>
+noremap <C-F> :<C-U><C-R>=printf("Leaderf! rg -e %s ", expand("<cword>"))<CR><CR>
+
+
+" defx
+call defx#custom#option('_', {
+      \ 'winwidth': 30,
+      \ 'split': 'vertical',
+      \ 'direction': 'topleft',
+      \ 'show_ignored_files': 0,
+      \ 'buffer_name': '',
+      \ 'toggle': 1,
+      \ 'resume': 1,
+      \})
+
+autocmd FileType defx call s:defx_mappings()
+function! s:defx_mappings() abort
+    nnoremap <silent><buffer><expr> .       defx#do_action('toggle_ignored_files') 
+    nnoremap <silent><buffer><expr> <C-r>   defx#do_action('redraw')
+    nnoremap <silent><buffer><expr> o       <SID>defx_toggle_tree()
+    nnoremap <silent><buffer><expr> c       defx#do_action('copy')
+    nnoremap <silent><buffer><expr> m       defx#do_action('move')
+    nnoremap <silent><buffer><expr> p       defx#do_action('paste')
+    nnoremap <silent><buffer><expr> <CR>    defx#do_action('open_or_close_tree')
+    nnoremap <silent><buffer><expr> q       defx#do_action('quit')
+    nnoremap <silent><buffer><expr> E       defx#do_action('open', 'vsplit')
+    nnoremap <silent><buffer><expr> k       defx#do_action('new_directory')
+    nnoremap <silent><buffer><expr> n       defx#do_action('new_file')
+    nnoremap <silent><buffer><expr> d       defx#do_action('remove')
+    nnoremap <silent><buffer><expr> m       defx#do_action('new_multiple_files')
+    nnoremap <silent><buffer><expr> r       defx#do_action('rename')
+    nnoremap <silent><buffer><expr> !       defx#do_action('execute_command')
+    nnoremap <silent><buffer><expr> yy      defx#do_action('yank_path')
+    nnoremap <silent><buffer><expr> <C-g>   defx#do_action('print')
+    nnoremap <silent><buffer><expr> h       defx#do_action('cd', ['..'])
+    nnoremap <silent><buffer><expr> ~       defx#do_action('cd')
+    nnoremap <silent><buffer><expr> <Space> defx#do_action('toggle_select') . 'j'
+    nnoremap <silent><buffer><expr> *       defx#do_action('toggle_select_all')
+    nnoremap <silent><buffer><expr> j       line('.') == line('$') ? 'gg' : 'j'
+    nnoremap <silent><buffer><expr> k       line('.') == 1 ? 'G' : 'k'
+    "nnoremap <silent><buffer><expr> P       defx#do_action('open', 'pedit')
+    "nnoremap <silent><buffer><expr> l       defx#do_action('open')
+    "nnoremap <silent><buffer><expr> C       defx#do_action('toggle_columns', 'mark:indent:icon:filename:type:size:time')
+    "nnoremap <silent><buffer><expr> S       defx#do_action('toggle_sort', 'time')
+    "nnoremap <silent><buffer><expr> x       defx#do_action('execute_system')
+    "nnoremap <silent><buffer><expr> ;       defx#do_action('repeat')
+endfunction
+
+function! s:defx_toggle_tree() abort
+    " Open current file, or toggle directory expand/collapse
+    if defx#is_directory()
+        return defx#do_action('open_or_close_tree')
+    endif
+    return defx#do_action('multi', ['drop'])
+endfunction
+nmap <silent><c-\> :Defx<CR>
+
+" YCM
+"let g:ycm_add_preview_to_completeopt = 0
+"let g:ycm_show_diagnostics_ui = 0
+"let g:ycm_server_log_level = 'info'
+"let g:ycm_min_num_identifier_candidate_chars = 2
+"let g:ycm_collect_identifiers_from_comments_and_strings = 1
+"let g:ycm_complete_in_strings=1
+"set completeopt=menu,menuone
+
+"if has('patch-8.0.1000')
+    "set completeopt=menu,menuone,noselect
+"endif
+"let g:ycm_semantic_triggers =  {
+            "\ 'c,cpp,python,java,go,erlang,perl,rust': ['re!\w{2}'],
+            "\ 'cs,lua,javascript': ['re!\w{2}'],
+            "\ }"
+"}
+" -family
+"let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/.ycm_extra_conf.py'
+"let g:acp_enableAtStartup = 0
+"let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
+"" let g:ycm_key_invoke_completion = '<c-z>'
+"let g:ycm_collect_identifiers_from_tags_files = 1
+"let g:ycm_seed_identifiers_with_syntax = 1
+"let g:ycm_confirm_extra_conf = 0
+"let g:ycm_cache_omnifunc=0
+"" noremap <c-z> <NOP>
+"let g:ycm_semantic_triggers =  {
+            "\ 'c,cpp,python,java,go,erlang,perl,rust': ['re!\w{2}'],
+            "\ 'cs,lua,javascript': ['re!\w{2}'],
+            "\ }
+"}"
+
+" ------------------depend-----------------
+" fzf
+nnoremap <silent> <Leader>vf :Files<CR>
+nnoremap <silent> <Leader>vL :Locate<Space>
+nnoremap <silent> <Leader>vgf :GFiles<CR>
+nnoremap <silent> <Leader>vl :Lines<CR>
+nnoremap <silent> <Leader>vbl :BLines<CR>
+nnoremap <silent> <Leader>va :Ag<CR>
+nnoremap <silent> <Leader>vm :Marks<CR>"
+nnoremap <silent> <Leader>vr :<C-U><C-R>=printf("Rg %s ", expand("<cword>"))<CR><CR>
+" [Buffers] Jump to the existing window if possible
+let g:fzf_buffers_jump = 1
+" [[B]Commits] Customize the options used by 'git log':
+let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
+" [Tags] Command to generate tags file
+let g:fzf_tags_command = 'ctags -R'
+" [Commands] --expect expression for directly executing the command
+let g:fzf_commands_expect = 'alt-enter,ctrl-x'
+" ag
+command! -bang -nargs=* Ag
+            \ call fzf#vim#ag(<q-args>,
+            \                 <bang>0 ? fzf#vim#with_preview('up:60%')
+            \                         : fzf#vim#with_preview('right:50%:hidden', '?'),
+            \                 <bang>0)
+
+
+" F
+command! -nargs=1 Rename let tpname = expand('%:t') | saveas <args> | edit <args> | call delete(expand(tpname))
+map <F2> :Rename<space>
+map <silent> <F3> <c-e>
+map <silent> <F4> <Leader>tt
+nnoremap <silent> <F5> :call asyncrun#quickfix_toggle(6)<CR>
+" noremap <F6> :Autoformat<CR>
