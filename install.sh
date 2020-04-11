@@ -40,10 +40,12 @@ if [ -f ~/.hci/.h1 ]; then
     mv ~/.hci/.h1 ~/.hci/.h2
 fi
 
-[ -f ~/.hci/.h2 ] && vim +PlugInstall +all && mv ~/.hci/.h2 ~/.hci/.h3
+[ -f ~/.hci/.h2 ] && vim +PlugInstall +all 
+mv ~/.hci/.h2 ~/.hci/.h3
 
 # install coc.nvim
 [ -f ~/.hci/.h3 ] && cp ./vimrc.local ~/.vimrc.local && cd ~/.vim/plugged/coc.nvim && ./install.sh && cd - && rm -rf ~/.hci
+pip3 install --user pynvim
 
 # 在nvim中可以通过:checkhealth检查服务是否运行(VIM不支持)
 # 选择性安装
