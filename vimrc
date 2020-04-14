@@ -51,6 +51,8 @@ Plug 'tpope/vim-obsession'
 Plug 'wakatime/vim-wakatime'
 Plug 'idanarye/vim-vebugger'
 " help vebugger-launching & help vebugger-usage
+Plug 'myusuf3/numbers.vim'
+Plug 'vim-scripts/sessionman.vim'
 
 "Plug 'ervandew/supertab'
 Plug 'mbbill/undotree'
@@ -69,3 +71,12 @@ call plug#end()
 if filereadable(expand("~/.vimrc.local"))
     source ~/.vimrc.local
 endif
+
+" COC
+let g:coc_global_extesions = ['coc-snippets', 'coc-git', 'coc-todolist', 'coc-spell-checker', 'coc-lists', 'coc-highlight', 'coc-svg',
+            \ 'coc-clangd', 'coc-cmake', 'coc-rls', 'coc-rust-analyzer', 'coc-go', 
+            \ 'coc-tsserver', 'coc-html', 'coc-css', 'coc-java', 'coc-python', 'coc-flutter', 'coc-emmet',
+            \ 'coc-xml', 'coc-yaml', 'coc-json', 'coc-markdownlint', 'coc-vimlsp', 'coc-yank',
+            \ 'coc-actions', 'coc-bookmark', 'coc-browser',
+            \ 'coc-calc', 'coc-cssmodules', 'coc-lsp-wl', 'coc-metals', 'coc-phpls', 'coc-powershell', 
+            \ 'coc-tasks', 'coc-template', 'coc-translator']

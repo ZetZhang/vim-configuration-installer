@@ -6,12 +6,14 @@ set mouse=a                 " Automatically enable mouse usage
 set mousehide               " Hide the mouse cursor while typing
 scriptencoding utf-8
 
+set autoread
 " set autowrite
 set shortmess+=filmnrxoOtT          " Abbrev. of messages (avoids 'hit enter')
 set viewoptions=folds,options,cursor,unix,slash " Better Unix / Windows compatibility
 set virtualedit=onemore             " Allow for cursor beyond last character
-set history=1000                    " Store a ton of history (default is 20)
+set history=5000                    " Store a ton of history (default is 20)
 set spell                           " Spell checking on
+set spell spelllang=en_us
 set hidden                          " Allow buffer switching without saving
 set iskeyword-=.                    " '.' is an end of word designator
 set iskeyword-=#                    " '#' is an end of word designator
@@ -84,7 +86,11 @@ set softtabstop=4
 set shiftwidth=4
 set expandtab
 set cursorline
-set noswapfile
+set autochdir
+set linebreak
+set laststatus=2
+set noerrorbells
+set visualbell
 " set cursorcolumn
 set nocompatible
 set completeopt=longest,menu
@@ -99,6 +105,7 @@ inoremap <c-g> <ESC>Bi
 inoremap <c-k> <ESC>lWi
 nnoremap <Silent><Leader>q gwip
 nnoremap <Leader>\ :w<CR>i
+nnoremap <Leader>// :qa!<CR>
 inoremap <c-f> <c-x><c-f>
 
 nnoremap <silent><c-l> <c-w>l
@@ -153,7 +160,13 @@ nnoremap <Leader>6 6gt
 nnoremap <Leader>7 7gt
 nnoremap <Leader>8 8gt
 nnoremap <Leader>9 9gt
+
+" python
 let g:pymode_python = 'python3'
+let g:python_host_prog = '/usr/bin/python'
+let g:python3_host_prog = '/usr/bin/python3'
+let g:ruby_host_prog = '/usr/bin/ruby'
+"let g:node_host_prog = '/usr/bin/node'
 
 " 远程vim与tmux联动的响应延迟
 "if $TMUX != ''
@@ -163,6 +176,17 @@ let g:pymode_python = 'python3'
 "endif
 
 " PlugInstall ------------------------------------
+" Sessionman
+let sessionman_save_on_exit = 1
+set sessionoptions=blank,buffers,curdir,folds,tabpages,winsize
+nmap <leader>sl :SessionList<CR>
+nmap <leader>ss :SessionSave<CR>
+nmap <leader>sc :SessionClose<CR>
+
+" numbers
+"let g:numbers_exclude = ['tagbar', 'gundo', 'minibufexpl', 'nerdtree', 'defx']
+let g:numbers_exclude = []
+nmap <silent><Leader>,, :<C-u>NumbersToggle<CR>
 
 " rainbow
 let g:rainbow_active = 1
@@ -222,8 +246,12 @@ let g:AutoPairsFlyMode = 0
 let g:AutoPairsShortcutBackInsert = '<M-b>'
 
 " undotree
-set backup
+"set backup
+"set backupdir=~/.cache/.backup/
+"set noswapfile
+"set directory=~/.cache/.swap/
 set undofile
+set undodir=~/.cache/.undo/
 set undolevels=10000
 set undoreload=10000
 nnoremap <Leader>nu :UndotreeToggle<CR>
@@ -254,9 +282,23 @@ nmap <Leader>a, :Tabularize /,<CR>
 vmap <Leader>a, :Tabularize /,<CR>
 nmap <Leader>a,, :Tabularize /,\zs<CR>
 vmap <Leader>a,, :Tabularize /,\zs<CR>
-nmap <Leader>a<Bar> :Tabularize /<Bar><CR>
-vmap <Leader>a<Bar> :Tabularize /<Bar><CR>
-nmap <Leader>a<Space> :Taularize <Space><Bar><CR>
+nmap <Leader>a; :Tabularize /;\zs<CR>
+vmap <Leader>a; :Tabularize /;\zs<CR>
+"nmap <Leader>a<Bar> :Tabularize /<Bar><CR>
+"vmap <Leader>a<Bar> :Tabularize /<Bar><CR>
+nmap <Leader>aa :Tabularize /
+vmap <Leader>aa :Tabularize /
+"nmap <Leader>a; :Tabularize /^[^;]*\zs,/r0c0l0
+nmap <Leader>ai :Tabularize //r0c0l0
+vmap <Leader>ai :Tabularize //r0c0l0
+nmap <Leader>ao :Tabularize //r1c1l0
+vmap <Leader>ao :Tabularize //r1c1l0
+nmap <Leader>ar :Tabularize //l0
+vmap <Leader>ar :Tabularize //l0
+nmap <Leader>al :Tabularize //r0
+vmap <Leader>al :Tabularize //r0
+nmap <Leader>ab :Tabularize /^[^ ]*\zs /r0c0l0
+vmap <Leader>ab :Tabularize /^[^ ]*\zs /r0c0l0
 
 " fugitive
 nnoremap <silent> <leader>gs :Gstatus<CR>
@@ -268,6 +310,7 @@ nnoremap <silent> <leader>gp :Git push<CR>
 nnoremap <silent> <leader>gr :Gread<CR>
 nnoremap <silent> <leader>gw :Gwrite<CR>
 nnoremap <silent> <leader>ge :Gedit<CR>
+nnoremap <silent> <leader>gg :! tig<CR>
 " Mnemonic _i_nteractive
 nnoremap <silent> <leader>gi :Git add -p %<CR>
 nnoremap <silent> <leader>gg :SignifyToggle<CR>
@@ -429,7 +472,7 @@ let g:ale_linters = {
             \}
 
 " echodoc
-" set noshowmode
+set noshowmode
 " let g:echodoc#type = "echo" " Default value
 " let g:echodoc_enable_at_startup = 1
 let g:echodoc#enable_at_startup = 1
@@ -561,7 +604,7 @@ nnoremap <silent> <Leader>vL :Locate<Space>
 nnoremap <silent> <Leader>vgf :GFiles<CR>
 nnoremap <silent> <Leader>vl :Lines<CR>
 nnoremap <silent> <Leader>vbl :BLines<CR>
-nnoremap <silent> <Leader>va :Ag<CR>
+nnoremap <silent> <Leader>va :Rg<CR>
 nnoremap <silent> <Leader>vm :Marks<CR>"
 nnoremap <silent> <Leader>vr :<C-U><C-R>=printf("Rg %s ", expand("<cword>"))<CR><CR>
 " [Buffers] Jump to the existing window if possible
@@ -587,3 +630,23 @@ map <silent> <F3> <c-e>
 map <silent> <F4> <Leader>tt
 nnoremap <silent> <F5> :call asyncrun#quickfix_toggle(6)<CR>
 " noremap <F6> :Autoformat<CR>
+
+" coc
+" the 4000 default will have bad experience for diagnostic messages
+set updatetime=300
+set signcolumn =yes
+" 高亮高标下的单词
+autocmd CursorHold * silent call CocActionAsync('highlight')
+" Remap for format selected region
+xmap <leader>fm  <Plug>(coc-format-selected)
+nmap <leader>fm  <Plug>(coc-format-selected)
+" Add status line support, for integration with other plugin, checkout `:h coc-status`
+set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+" navigate diagnostics
+nmap <silent><Leader>dp <Plug>(coc-diagnostic-prev)
+nmap <silent><Leader>dn <Plug>(coc-diagnostic-next)
+" Remap keys for gotos
+nmap <silent><Leader>dd <Plug>(coc-definition)
+nmap <silent><Leader>dt <Plug>(coc-type-definition)
+nmap <silent><Leader>di <Plug>(coc-implementation)
+nmap <silent><Leader>dr <Plug>(coc-references)
