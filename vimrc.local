@@ -147,7 +147,7 @@ nnoremap <Leader>tc :tabclose<CR>
 nnoremap <Leader>to :tabo<CR>
 nnoremap <Leader>tm :tabmove<Space>
 nnoremap <Leader>tdo :tabdo<Space>
-nnoremap <Leader>tp : tab split<CR>
+nnoremap <Leader>tP :tab split<CR>
 nnoremap <Leader>tw :e<Space>
 nnoremap <Leader>ts :sp<Space>
 nnoremap <Leader>tv :vsp<Space>
@@ -176,6 +176,19 @@ let g:ruby_host_prog = '/usr/bin/ruby'
 "endif
 
 " PlugInstall ------------------------------------
+" indent-guides
+let g:indent_guides_enable_on_vim_startup=1
+let g:indent_guides_start_level=2
+let g:indent_guides_guide_size=1
+nmap <silent> <Leader>i <Plug>IndentGuidesToggle
+let g:indent_guides_auto_colors = 0
+autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=red   ctermbg=2
+autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=green ctermbg=6
+let g:indent_guides_indent_levels = 100
+" let g:indent_guides_color_change_percent = 10
+let g:indent_guides_guide_size = 1
+" let g:indent_guides_exclude_filetypes = ['help', 'nerdtree']
+
 " Sessionman
 let sessionman_save_on_exit = 1
 set sessionoptions=blank,buffers,curdir,folds,tabpages,winsize
@@ -233,17 +246,39 @@ let g:NERDTreeIndicatorMapCustom = {
             \ }
 
 " autoformat
-" noremap <F6> :Autoformat<CR>
-" let g:autoformat_verbosemode = 1
+noremap <F6> :Autoformat<CR>
+let g:autoformat_verbosemode = 1
 " "g:formatdef_clangformat
 
 " nerdcommenter
+" 注释定界符后面加上空格
+let g:NERDSpaceDelims = 1
+" 多行注释使用紧凑语法
+let g:NERDCompactSexyComs = 1
+" 注释左对齐而不是代码对其
+let g:NERDDefaultAlign = 'left'
+" 自定义
+" let g:NERDCustomDelimiters = { 'c': { 'left': '/**','right': '*/' } }
+" 是否允许空白行注释
+" let g:NERDCommentEmptyLines = 1
+" 是否嵌套的注释
+" let g:NERDTrimTrailingWhitespace = 1
+" 检查选中的所有行
+let g:NERDToggleCheckAllLines = 1
+
 " easymotion
+nmap s <Plug>(easymotion-overwin-f)
+let g:EasyMotion_use_smartsign_us = 1 " US layout
+let g:EasyMotion_startofline = 0 " keep cursor column when JK motion
+let g:EasyMotion_smartcase = 1
+" let g:EasyMotion_use_upper = 1 " 总是将键转换成大写字母，这将导致s无法跳转
+let g:EasyMotion_do_mapping = 0 " Disable default mappings
+"nmap s <Plug>(easymotion-overwin-f2)
 
 " auto-pairs
-" default
-let g:AutoPairsFlyMode = 0
-let g:AutoPairsShortcutBackInsert = '<M-b>'
+" default 飞行模式（这里没有M-e键）
+" let g:AutoPairsFlyMode = 0
+" let g:AutoPairsShortcutBackInsert = '<M-b>'
 
 " undotree
 "set backup
@@ -352,12 +387,6 @@ let g:airline_symbols.branch = ''
 let g:airline_symbols.readonly = ''
 let g:airline_symbols.linenr = ''
 
-" indent_guides
-"let g:indent_guides_enable_on_vim_startup=1
-"let g:indent_guides_start_level=2
-"let g:indent_guides_guide_size=1
-":nmap <silent> <Leader>i <Plug>IndentGuidesToggle
-
 " SnipMate
 let g:snipMate = get(g:, 'snipMate', {}) " Allow for vimrc re-sourcing
 let g:snipMate.scope_aliases = {}
@@ -428,10 +457,10 @@ nnoremap <Leader>mmd :AsyncRun -raw g++ -std=c++14 -Wall -g "$(VIM_FILEPATH)" -o
 " 项目文件编译运行
 nnoremap <silent><Leader>mcc :AsyncRun -raw -cwd="$(VIM_ROOT)" cmake -B "$(VIM_ROOT)/build/" . <CR>
 " 可以是make run，要先cmake配置add_custom_target
-nnoremap <silent><Leader>mca :AsyncRun -raw -cwd="$(VIM_ROOT)" make -C "$(VIM_ROOT)/build/" <CR>
-nnoremap <silent><Leader>mcb :AsyncRun -raw -cwd="$(VIM_ROOT)" make -C "$(VIM_ROOT)/build/" "$(VIM_FILENOEXT)" <CR>
-nnoremap <silent><Leader>mct :AsyncRun -raw -cwd="$(VIM_ROOT)" make -C "$(VIM_ROOT)/build/" test <CR>
-nnoremap <Leader>mcd :AsyncRun -raw -cwd="$(VIM_ROOT)" make -C "$(VIM_ROOT)/build/" clean <CR>
+nnoremap <silent><Leader>mca :AsyncRun -raw -cwd="$(VIM_ROOT)" make -j8 -C "$(VIM_ROOT)/build/" <CR>
+nnoremap <silent><Leader>mcb :AsyncRun -raw -cwd="$(VIM_ROOT)" make -j8 -C "$(VIM_ROOT)/build/" "$(VIM_FILENOEXT)" <CR>
+nnoremap <silent><Leader>mct :AsyncRun -raw -cwd="$(VIM_ROOT)" make -j8 -C "$(VIM_ROOT)/build/" test <CR>
+nnoremap <Leader>mcd :AsyncRun -raw -cwd="$(VIM_ROOT)" make -j8 -C "$(VIM_ROOT)/build/" clean <CR>
 
 " doxygen
 let g:DoxygenToolkit_briefTag_pre="@brief  "
@@ -503,13 +532,13 @@ noremap <Leader>lm :<C-U><C-R>=printf("Leaderf mru %s", "")<CR><CR>
 noremap <Leader>lt :<C-U><C-R>=printf("Leaderf bufTag %s", "")<CR><CR>
 noremap <Leader>la :<C-U><C-R>=printf("Leaderf line %s", "")<CR><CR>
 noremap <Leader>lw :<C-U><C-R>=printf("Leaderf window %s", "")<CR><CR>
-noremap <Leader>lf :<C-U><C-R>=printf("Leaderf! function %s", "")<CR><CR>
-noremap <Leader>lff :<C-U><C-R>=printf("Leaderf function %s", "")<CR><CR>
+noremap <Leader>lf :<C-U><C-R>=printf("Leaderf function %s", "")<CR><CR>
+noremap <Leader>lc :<C-U><C-R>=printf("Leaderf command %s", "")<CR><CR>
+noremap <silent><Leader>lr :LeaderfRgInteractive<CR>
 xnoremap gf :<C-U><C-R>=printf("Leaderf! rg -f -e %s ", leaderf#Rg#visual())<CR>
 noremap go :<C-U>Leaderf! rg --recall<CR>
 noremap <C-B> :<C-U><C-R>=printf("Leaderf! rg --current-buffer -e %s ", expand("<cword>"))<CR><CR>
 noremap <C-F> :<C-U><C-R>=printf("Leaderf! rg -e %s ", expand("<cword>"))<CR><CR>
-
 
 " defx
 call defx#custom#option('_', {

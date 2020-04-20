@@ -53,6 +53,7 @@ Plug 'idanarye/vim-vebugger'
 " help vebugger-launching & help vebugger-usage
 Plug 'myusuf3/numbers.vim'
 Plug 'vim-scripts/sessionman.vim'
+Plug 'nathanaelkane/vim-indent-guides'
 
 "Plug 'ervandew/supertab'
 Plug 'mbbill/undotree'
