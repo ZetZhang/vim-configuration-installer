@@ -176,6 +176,35 @@ let g:ruby_host_prog = '/usr/bin/ruby'
 "endif
 
 " PlugInstall ------------------------------------
+
+" startify
+"设置书签
+let g:startify_bookmarks = [
+            \ '~/.vimrc.local',
+            \]
+"起始页显示的列表长度
+let g:startify_files_number = 20
+"自动加载session
+let g:startify_session_autoload = 1
+"过滤列表，支持正则表达式
+let g:startify_skiplist = [
+       \ '^/tmp',
+       \ ]
+"自定义Header和Footer
+let g:startify_custom_header = [
+            \ '+------------------------------+',
+            \ '|                              |',
+            \ '|    Still waters run deep!    |',
+            \ '|                              |',
+            \ '+----------------+-------------+',
+            \]
+let g:startify_custom_footer = [
+            \ '+------------------------------+',
+            \ '|     Keep an open mind!       |',
+            \ '+----------------+-------------+',
+            \]
+noremap <F7> :Startify<CR>
+
 " indent-guides
 let g:indent_guides_enable_on_vim_startup=1
 let g:indent_guides_start_level=2
@@ -226,7 +255,7 @@ let NERDTreeShowHidden=1
 let NERDTreeKeepTreeInNewTab=1
 let g:nerdtree_tabs_open_on_gui_startup=0
 " 打开vim如果没有文件自动打开nerdtree
-autocmd vimenter * if !argc()|NERDTree|endif
+" autocmd vimenter * if !argc()|NERDTree|endif
 " 当nerdtree为最后窗口时自动关闭
 "autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 " nerdtree自动查找并选择当前打开的文件
