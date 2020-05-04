@@ -56,6 +56,17 @@ Plug 'vim-scripts/sessionman.vim'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'mhinz/vim-startify'
 Plug 'lilydjwg/colorizer'
+Plug 'aklt/plantuml-syntax'
+Plug 'weirongxu/plantuml-previewer.vim'
+Plug 'tyru/open-browser.vim'
+" Plug 'scrooloose/vim-slumlord'
+Plug 'previm/previm'
+if has('nvim')
+    Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
+else
+    Plug 'iamcco/markdown-preview.vim'
+endif
+Plug 'iamcco/mathjax-support-for-mkdp'
 
 "Plug 'ervandew/supertab'
 Plug 'mbbill/undotree'

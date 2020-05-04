@@ -179,6 +179,76 @@ let g:ruby_host_prog = '/usr/bin/ruby'
 noremap <F8> :! dolphin . &<CR><CR>
 
 " PlugInstall ------------------------------------
+" markdown-preview
+if has('nvim')
+    let g:mkdp_auto_start = 0
+    let g:mkdp_auto_close = 1
+    let g:mkdp_refresh_slow = 0
+    let g:mkdp_command_for_global = 1
+    let g:mkdp_open_to_the_world = 1
+    " 自定义IP打开预览页：https://github.com/iamcco/markdown-preview.nvim/pull/9 
+    let g:mkdp_open_ip = ''
+    let g:mkdp_browser = '/usr/bin/google-chrome-stable'
+    let g:mkdp_echo_preview_url = 0
+    let g:mkdp_browserfunc = ''
+    let g:mkdp_preview_options = {
+                \ 'mkit': {},
+                \ 'katex': {},
+                \ 'uml': {},
+                \ 'puml': {},
+                \ 'maid': {},
+                \ 'disable_sync_scroll': 0,
+                \ 'sync_scroll_type': 'middle',
+                \ 'hide_yaml_meta': 1,
+                \ 'sequence_diagrams': {},
+                \ 'flowchart_diagrams': {}
+                \ }
+    let g:mkdp_markdown_css = ''
+    let g:mkdp_highlight_css = ''
+    let g:mkdp_port = '12305'
+    " let g:mkdp_page_title = '「${name}」'
+else
+    " 默认浏览器
+    let g:mkdp_path_to_chrome = '/usr/bin/google-chrome-stable'
+    let g:mkdp_auto_start = 0
+    let g:mkdp_auto_open = 0
+    let g:mkdp_auto_close = 1
+    let g:mkdp_refresh_slow = 0
+    let g:mkdp_command_for_global = 0
+    let g:mkdp_open_to_the_world = 1
+endif
+nnoremap <Leader>um :MarkdownPreview<CR>
+nnoremap <Leader>un :MarkdownPreviewStop<CR>
+
+" plantuml-previewer
+let g:plantuml_previewer#save_format = 'png'
+" let g:plantuml_previewer#viewr_path = ''
+nnoremap <Leader>us :PlantumlSave<Space>
+nnoremap <Leader>uo :PlantumlOpen<CR>
+
+if exists("g:loaded_dzfplantuml_syntax")
+    finish
+endif
+let g:loaded_dzfplantuml_syntax = 1
+" 对 plantuml 文件绘制图片
+function! UmlImageUpdate() abort
+    " 先保存再执行命令
+    let cmd = "w | !plantuml " . fnameescape(expand('%:t'))
+    exec cmd
+endfunction
+" 对 plantuml 文件绘制图片, 并调用缺省的图片浏览器进行查看
+function! UmlImageShow() abort
+    let l:viewer='xdg-open'
+    if has('mac')
+        let l:viewer='open'
+    endif
+    call UmlImageUpdate()
+    exec '!'.l:viewer.' '.expand('%:r').'.png'
+endfunction
+com! -nargs=0 UmlImageUpdate :call UmlImageUpdate()
+com! -nargs=0 ViewUmlImage :call UmlImageShow()
+" nnoremap <silent><buffer><leader>uu :UmlImageUpdate<CR><CR>
+nnoremap <silent><buffer><leader>uv :ViewUmlImage<CR><CR><CR>
 
 " startify
 "设置书签
@@ -496,6 +566,23 @@ nnoremap <silent><Leader>mcb :AsyncRun -raw -cwd="$(VIM_ROOT)" make -j8 -C "$(VI
 nnoremap <silent><Leader>mct :AsyncRun -raw -cwd="$(VIM_ROOT)" make -j8 -C "$(VIM_ROOT)/build/" test <CR>
 nnoremap <Leader>mcd :AsyncRun -raw -cwd="$(VIM_ROOT)" make -j8 -C "$(VIM_ROOT)/build/" clean <CR>
 " browser
+" use google chrome instaad of default broswer
+" let g:openbrowser_browser_commands = [
+"             \   {'name': '/usr/bin/firefox',
+"             \    'args': ['start', '{browser}', '{uri}']}
+"             \]
+" 搜索引擎：google、baidu、bing、mijisou
+let g:openbrowser_default_search = 'mijisou'
+let g:openbrowser_search_engines = {
+            \   'baidu': 'https://www.baidu.com/s?ie=utf-8&f=8&rsv_bp=1&tn=baidu&wd={query}',
+            \   'google': 'https://www.google.com/search?&q={query}&ie=utf-8',
+            \   'mijisou': 'https://mijisou.com/?q={query}&category_general=on&time_range=&language=zh-CN&pageno=1',
+            \   'bing': 'https://cn.bing.com/search?q={query}&qs=n&sp=-1',
+            \}
+nnoremap <Leader>hh :OpenBrowser<Space>
+nnoremap <Leader>hs :OpenBrowserSmartSearch<Space>-baidu<Space>
+vmap hs <Plug>(openbrowser-smart-search)
+" with AsyncRun
 nnoremap <silent><Leader>hf :AsyncRun -raw firefox "$(VIM_FILEDIR)/$(VIM_FILE)" &<CR>
 nnoremap <silent><Leader>hc :AsyncRun -raw google-chrome-stable "$(VIM_FILEDIR)/$(VIM_FILE)" &<CR>
 nnoremap <silent><Leader>hpf :AsyncRun -raw firefox &<CR>
@@ -505,13 +592,13 @@ nnoremap <silent><Leader>hpc :AsyncRun -raw google-chrome-stable &<CR>
 let g:DoxygenToolkit_briefTag_pre="@brief  "
 let g:DoxygenToolkit_paramTag_pre="@param  "
 let g:DoxygenToolkit_returnTag="@return   "
-let g:DoxygenToolkit_blockHeader="--------------------------------------------------------------------------"
-let g:DoxygenToolkit_blockFooter="----------------------------------------------------------------------------"
-let g:DoxygenToolkit_authorName="Ichheit, 13660591402@163.com"
+" let g:DoxygenToolkit_blockHeader="--------------------------------------------------------------------------"
+" let g:DoxygenToolkit_blockFooter="----------------------------------------------------------------------------"
+let g:DoxygenToolkit_authorName="Ichheit, <13660591402@163.com>"
 let s:licenseTag="\<enter>"
-let s:licenseTag = s:licenseTag . "Copyright (C) 2020 ...\<enter>"
-let s:licenseTag = s:licenseTag . "For free\<enter>"
-let s:licenseTag = s:licenseTag . "All right reserved"
+let s:licenseTag = s:licenseTag . "Copyright © 2020 .\<enter>"
+let s:licenseTag = s:licenseTag . "For Free\<enter>"
+let s:licenseTag = s:licenseTag . "All right Reserved."
 let g:DoxygenToolkit_licenseTag=s:licenseTag
 let g:DoxygenToolkit_briefTag_funcName="yes"
 let g:doxygen_enhanced_color=1
@@ -545,7 +632,7 @@ set noshowmode
 " let g:echodoc_enable_at_startup = 1
 let g:echodoc#enable_at_startup = 1
 let g:echodoc#type = 'popup'
-set cmdheight=1
+" set cmdheight=1
 highlight link EchoDocPopup Pmenu
 
 
@@ -701,7 +788,7 @@ nnoremap <silent> <F5> :call asyncrun#quickfix_toggle(6)<CR>
 
 " coc
 " the 4000 default will have bad experience for diagnostic messages
-set updatetime=300
+set updatetime=100
 set signcolumn =yes
 " 高亮高标下的单词
 autocmd CursorHold * silent call CocActionAsync('highlight')
