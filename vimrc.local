@@ -81,11 +81,6 @@ set hls
 set tw=80
 set rnu
 set cindent
-set tabstop=4
-set softtabstop=4
-set shiftwidth=4
-set expandtab
-set cursorline
 set autochdir
 set linebreak
 set laststatus=2
@@ -96,6 +91,17 @@ set nocompatible
 set completeopt=longest,menu
 set foldmethod=syntax
 set foldlevelstart=99
+" relative number.vim
+function! ScrollToggle()
+    if &so == 0
+        se so=999
+        " call NumbersRelativeOff()
+    else
+        se so=0
+        " set relativenumber
+    endif
+endfunction
+nnoremap <F3> :call ScrollToggle()<CR>
 
 " op
 " nnoremap <space> @=((foldclosed(line( '.' )) < 0)? 'zc' : 'zo')<CR>
@@ -110,9 +116,9 @@ inoremap <C-j> <Down>
 inoremap <C-k> <Up>
 inoremap <C-a> <Home>
 inoremap <C-e> <End>
-inoremap <C-m> <C-o>o
+inoremap <C-n> <C-o>o
 nnoremap <Leader>// :qa!<CR>
-inoremap <C-z> <C-o>ddk$a
+inoremap <C-z> <Esc>ddk$a
 nnoremap <Silent><Leader>q gwip
 inoremap <C-u> <C-o>ui
 inoremap <C-b> <C-o><C-r>i
@@ -139,10 +145,12 @@ nnoremap <Leader>b8 :b8<CR>
 nnoremap <Leader>b9 :b9<CR>
 
 " tab swtich
+if !has('gui_running')
 set showtabline=1
 nnoremap <Leader>te :tabedit<Space>
 nnoremap <Leader>tN :tabnew<CR>
-nnoremap <Leader>ts :tabs<CR>
+nnoremap <Leader>ta :tabs<CR>
+" 可以使用Ctrl-pgdn和Ctrl-pgup来代替
 nnoremap <Leader>tn :tabnext<CR>
 nnoremap <Leader>tp :tabNext<CR>
 nnoremap <Leader>tf :tabfirst<CR>
@@ -164,6 +172,29 @@ nnoremap <Leader>6 6gt
 nnoremap <Leader>7 7gt
 nnoremap <Leader>8 8gt
 nnoremap <Leader>9 9gt
+nnoremap <Leader>0 10gt
+" alt+n or alt+shift+n to "<ESC>]{0}n~"
+noremap <silent><ESC>]{0}1~ 1gt
+noremap <silent><ESC>]{0}2~ 2gt
+noremap <silent><ESC>]{0}3~ 3gt
+noremap <silent><ESC>]{0}4~ 4gt
+noremap <silent><ESC>]{0}5~ 5gt
+noremap <silent><ESC>]{0}6~ 6gt
+noremap <silent><ESC>]{0}7~ 7gt
+noremap <silent><ESC>]{0}8~ 8gt
+noremap <silent><ESC>]{0}9~ 9gt
+noremap <silent><ESC>]{0}0~ 10gt
+inoremap <silent><ESC>]{0}1~ <ESC>1gt
+inoremap <silent><ESC>]{0}2~ <ESC>2gt
+inoremap <silent><ESC>]{0}3~ <ESC>3gt
+inoremap <silent><ESC>]{0}4~ <ESC>4gt
+inoremap <silent><ESC>]{0}5~ <ESC>5gt
+inoremap <silent><ESC>]{0}6~ <ESC>6gt
+inoremap <silent><ESC>]{0}7~ <ESC>7gt
+inoremap <silent><ESC>]{0}8~ <ESC>8gt
+inoremap <silent><ESC>]{0}9~ <ESC>9gt
+inoremap <silent><ESC>]{0}0~ <ESC>10gt
+endif
 
 " python
 let g:pymode_python = 'python3'
@@ -182,7 +213,80 @@ let g:ruby_host_prog = '/usr/bin/ruby'
 " open folder
 noremap <F8> :! dolphin . &<CR><CR>
 
+" make tabline in terminal mode
+function! Vim_NeatTabLine()
+    let s = ''
+    for i in range(tabpagenr('$'))
+        " select the highlighting
+        if i + 1 == tabpagenr()
+            let s .= '%#TabLineSel#'
+        else
+            let s .= '%#TabLine#'
+        endif
+        " set the tab page number (for mouse clicks)
+        let s .= '%' . (i + 1) . 'T'
+        " the label is made by MyTabLabel()
+        let s .= ' %{Vim_NeatTabLabel(' . (i + 1) . ')} '
+    endfor
+    " after the last tab fill with TabLineFill and reset tab page nr
+    let s .= '%#TabLineFill#%T'
+    " right-align the label to close the current tab page
+    if tabpagenr('$') > 1
+        let s .= '%=%#TabLine#%999XX'
+    endif
+    return s
+endfunc
+ 
+" get a single tab name 
+function! Vim_NeatBuffer(bufnr, fullname)
+    let l:name = bufname(a:bufnr)
+    if getbufvar(a:bufnr, '&modifiable')
+        if l:name == ''
+            return '[No Name]'
+        else
+            if a:fullname 
+                return fnamemodify(l:name, ':p')
+            else
+                return fnamemodify(l:name, ':t')
+            endif
+        endif
+    else
+        let l:buftype = getbufvar(a:bufnr, '&buftype')
+        if l:buftype == 'quickfix'
+            return '[Quickfix]'
+        elseif l:name != ''
+            if a:fullname 
+                return '-'.fnamemodify(l:name, ':p')
+            else
+                return '-'.fnamemodify(l:name, ':t')
+            endif
+        else
+        endif
+        return '[No Name]'
+    endif
+endfunc
+ 
+" get a single tab label
+function! Vim_NeatTabLabel(n)
+    let l:buflist = tabpagebuflist(a:n)
+    let l:winnr = tabpagewinnr(a:n)
+    let l:bufnr = l:buflist[l:winnr - 1]
+    return Vim_NeatBuffer(l:bufnr, 0)
+endfunc
+
+" setup new tabline, just like %M%t in macvim
+set tabline=%!Vim_NeatTabLine()
+
 " PlugInstall ------------------------------------
+" surround
+nmap <Leader>sw ysiw
+nmap <Leader>sl yss
+nmap <Leader>sh cst
+nmap <Leader>sr cs
+" di与ds
+" i模式下<C-S>a[rb]：添加b
+" v模式下S可以替换
+
 " markdown-preview
 if has('nvim')
     let g:mkdp_auto_start = 0
@@ -301,9 +405,9 @@ let g:indent_guides_guide_size = 1
 " Sessionman
 let sessionman_save_on_exit = 1
 set sessionoptions=blank,buffers,curdir,folds,tabpages,winsize
-nmap <leader>sl :SessionList<CR>
-nmap <leader>ss :SessionSave<CR>
-nmap <leader>sc :SessionClose<CR>
+nmap <leader>sel :SessionList<CR>
+nmap <leader>ses :SessionSave<CR>
+nmap <leader>sec :SessionClose<CR>
 
 " numbers
 "let g:numbers_exclude = ['tagbar', 'gundo', 'minibufexpl', 'nerdtree', 'defx']
@@ -547,6 +651,8 @@ endif
 " AsyncRun
 " terminal mode: tab/curwin/top/bottom/left/right/quickfix/external
 let g:asynctasks_term_pos = 'quickfix'
+" 放置标签覆盖
+set switchbuf=useopen,usetab,newtab
 " 自动打开quickfix window
 let g:asyncrun_open = 10
 let g:asyncrun_bell = 1
