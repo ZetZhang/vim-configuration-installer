@@ -95,23 +95,27 @@ set visualbell
 set nocompatible
 set completeopt=longest,menu
 set foldmethod=syntax
-" nnoremap <space> @=((foldclosed(line( '.' )) < 0)? 'zc' : 'zo')<CR>
 set foldlevelstart=99
-inoremap <C-l> <Esc>o
-inoremap <C-z> <ESC>ddk$a
-inoremap <c-b> <ESC>ui
-map <c-_> <ESC><C-r>i
-inoremap <c-g> <ESC>Bi
-inoremap <c-k> <ESC>lWi
-nnoremap <Silent><Leader>q gwip
-nnoremap <Leader>\ :w<CR>i
-nnoremap <Leader>// :qa!<CR>
-inoremap <c-f> <c-x><c-f>
 
-nnoremap <silent><c-l> <c-w>l
-nnoremap <silent><c-h> <c-w>h
-nnoremap <silent><c-j> <c-w>j
-nnoremap <silent><c-k> <c-w>k
+" op
+" nnoremap <space> @=((foldclosed(line( '.' )) < 0)? 'zc' : 'zo')<CR>
+nmap ; :
+nnoremap <C-l> <c-w>l
+nnoremap <C-h> <c-w>h
+nnoremap <C-j> <c-w>j
+nnoremap <C-k> <c-w>k
+inoremap <C-l> <Right>
+inoremap <C-h> <Left>
+inoremap <C-j> <Down>
+inoremap <C-k> <Up>
+inoremap <C-a> <Home>
+inoremap <C-e> <End>
+inoremap <C-m> <C-o>o
+nnoremap <Leader>// :qa!<CR>
+inoremap <C-z> <C-o>ddk$a
+nnoremap <Silent><Leader>q gwip
+inoremap <C-u> <C-o>ui
+inoremap <C-b> <C-o><C-r>i
 
 " buffer switch
 nnoremap <Leader>bn :bn<CR>
@@ -220,6 +224,9 @@ endif
 nnoremap <Leader>um :MarkdownPreview<CR>
 nnoremap <Leader>un :MarkdownPreviewStop<CR>
 
+" previm
+let g:previm_open_cmd = 'plantuml'
+
 " plantuml-previewer
 let g:plantuml_previewer#save_format = 'png'
 " let g:plantuml_previewer#viewr_path = ''
@@ -314,10 +321,10 @@ let g:tagbar_vertical = 0
 let g:tagbar_sort = 0
 let g:tagbar_compact = 1
 let g:tagbar_autofocus = 1
-nnoremap <Leader>tt :TagbarToggle<CR>
+map <C-Q> :TagbarToggle<CR>
 
 " nerdtree
-map <C-e> :NERDTreeTabsToggle<CR>
+map <C-E> :NERDTreeTabsToggle<CR>
 "map <leader>e :NERDTreeFind<CR>
 "nmap <leader>nt :NERDTreeFind<CR>
 let NERDTreeWinPos="right"
@@ -383,6 +390,8 @@ let g:EasyMotion_do_mapping = 0 " Disable default mappings
 " default 飞行模式（这里没有M-e键）
 " let g:AutoPairsFlyMode = 0
 " let g:AutoPairsShortcutBackInsert = '<M-b>'
+" 对于inoremap <C-H>会有冲突，默认是1
+let g:AutoPairsMapCh = 0
 
 " undotree
 "set backup
@@ -543,14 +552,14 @@ let g:asyncrun_open = 10
 let g:asyncrun_bell = 1
 let g:asynctasks_term_rows = 20
 let g:asynctasks_term_cols = 30
-" nnoremap <silent> <F5> :call asyncrun#quickfix_toggle(6)<CR>
 " 向上递归，遇到以下文件则视为项目目录
 let g:asyncrun_rootmarks = ['.svn', '.git', '.root', '_darcs', 'build.xml']
 " 在项目主目录生成.tags
 " ctags -R --c++-kinds=+p --fields=+iaS --extras=+q --output-format=e-ctags -f ./.tags
 " set tags=./.tags;,.tags
 nnoremap <silent><Leader>ri :AsyncRun -raw ctags -R --c++-kinds=+p --fields=+iaS --extras=+q --output-format=e-ctags -f "$(VIM_ROOT)/.tags" <CR>
-map <F10> <Leader>ri<C-W><C-]><F5>
+nnoremap <silent><C-\> :call asyncrun#quickfix_toggle(6)<CR>
+map <F10> <Leader>ri<C-W><C-]><C-\>
 " 单文件编译运行
 nnoremap <silent><Leader>mr :AsyncRun -raw "$(VIM_FILEDIR)/$(VIM_FILENOEXT)"<CR>
 nnoremap <Leader>md :AsyncRun -raw rm -f "$(VIM_FILEDIR)/$(VIM_FILENOEXT)"<CR>
@@ -565,6 +574,7 @@ nnoremap <silent><Leader>mca :AsyncRun -raw -cwd="$(VIM_ROOT)" make -j8 -C "$(VI
 nnoremap <silent><Leader>mcb :AsyncRun -raw -cwd="$(VIM_ROOT)" make -j8 -C "$(VIM_ROOT)/build/" "$(VIM_FILENOEXT)" <CR>
 nnoremap <silent><Leader>mct :AsyncRun -raw -cwd="$(VIM_ROOT)" make -j8 -C "$(VIM_ROOT)/build/" test <CR>
 nnoremap <Leader>mcd :AsyncRun -raw -cwd="$(VIM_ROOT)" make -j8 -C "$(VIM_ROOT)/build/" clean <CR>
+
 " browser
 " use google chrome instaad of default broswer
 " let g:openbrowser_browser_commands = [
@@ -667,6 +677,7 @@ noremap <C-B> :<C-U><C-R>=printf("Leaderf! rg --current-buffer -e %s ", expand("
 noremap <C-F> :<C-U><C-R>=printf("Leaderf! rg -e %s ", expand("<cword>"))<CR><CR>
 
 " defx
+map <silent><F5> :Defx<CR>
 call defx#custom#option('_', {
       \ 'winwidth': 30,
       \ 'split': 'vertical',
@@ -717,7 +728,6 @@ function! s:defx_toggle_tree() abort
     endif
     return defx#do_action('multi', ['drop'])
 endfunction
-nmap <silent><c-\> :Defx<CR>
 
 " YCM
 "let g:ycm_add_preview_to_completeopt = 0
@@ -781,10 +791,6 @@ command! -bang -nargs=* Ag
 " F
 command! -nargs=1 Rename let tpname = expand('%:t') | saveas <args> | edit <args> | call delete(expand(tpname))
 map <F2> :Rename<space>
-map <silent> <F3> <c-e>
-map <silent> <F4> <Leader>tt
-nnoremap <silent> <F5> :call asyncrun#quickfix_toggle(6)<CR>
-" noremap <F6> :Autoformat<CR>
 
 " coc
 " the 4000 default will have bad experience for diagnostic messages
