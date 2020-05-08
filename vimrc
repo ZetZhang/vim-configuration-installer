@@ -67,6 +67,9 @@ else
     Plug 'iamcco/markdown-preview.vim'
 endif
 Plug 'iamcco/mathjax-support-for-mkdp'
+" Plug 'vim-scripts/VimIM'
+" Plug 'davidhalter/jedi-vim'
+Plug 'Flowerowl/ici.vim'
 
 "Plug 'ervandew/supertab'
 Plug 'mbbill/undotree'

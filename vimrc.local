@@ -86,11 +86,13 @@ set linebreak
 set laststatus=2
 set noerrorbells
 set visualbell
-" set cursorcolumn
+set cursorcolumn
 set nocompatible
 set completeopt=longest,menu
 set foldmethod=syntax
 set foldlevelstart=99
+set colorcolumn=+1,+2
+" highlight ColorColumn ctermbg=lightgrey guibg=lightgrey
 " relative number.vim
 function! ScrollToggle()
     if &so == 0
@@ -120,8 +122,15 @@ inoremap <C-n> <C-o>o
 nnoremap <Leader>// :qa!<CR>
 inoremap <C-z> <Esc>ddk$a
 nnoremap <Silent><Leader>q gwip
-inoremap <C-u> <C-o>ui
-inoremap <C-b> <C-o><C-r>i
+inoremap <C-u> <C-o>w<CR>ui
+inoremap <C-b> <C-o>w<CR><C-r>i
+nnoremap <ESC> :noh<CR>
+
+" terminal
+if has('nvim')
+    nnoremap <Leader>ra :terminal<CR>i
+    tnoremap <m-q> <c-\><c-n>
+endif
 
 " buffer switch
 nnoremap <Leader>bn :bn<CR>
@@ -131,7 +140,8 @@ nnoremap <Leader>bc :bd<CR>
 nnoremap <Leader>bl :blast<CR>
 nnoremap <Leader>bf :bfirst<CR>
 nnoremap <Leader>bb :Buffers<CR>
-nnoremap <Leader>r  :!<Space>
+nnoremap <Leader>re :!<Space>
+nnoremap <Leader>rw :r!<Space>
 nnoremap <Leader>rr :AsyncRun -raw<Space>
 nnoremap <Leader>b0 :buffers<CR>:bb<Space>
 nnoremap <Leader>b1 :b1<CR>
@@ -163,6 +173,8 @@ nnoremap <Leader>tP :tab split<CR>
 nnoremap <Leader>tw :e<Space>
 nnoremap <Leader>ts :sp<Space>
 nnoremap <Leader>tv :vsp<Space>
+nnoremap <Leader>tts :sp<CR>:terminal<CR>i
+nnoremap <Leader>ttv :vsp<CR>:terminal<CR>i
 nnoremap <Leader>1 1gt
 nnoremap <Leader>2 2gt
 nnoremap <Leader>3 3gt
@@ -278,6 +290,14 @@ endfunc
 set tabline=%!Vim_NeatTabLine()
 
 " PlugInstall ------------------------------------
+" ici
+if has('nvim')
+    nmap <Leader>yy :IciFrom <CR>
+else
+    nmap <Leader>yy :! echo --==<C-R><C-W>==-- ;ici <C-R><C-W><CR>
+endif
+nmap <Leader>ys :Ici<Space>
+
 " surround
 nmap <Leader>sw ysiw
 nmap <Leader>sl yss
