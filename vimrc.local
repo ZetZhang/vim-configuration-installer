@@ -85,6 +85,7 @@ set autochdir
 set linebreak
 set laststatus=2
 set noerrorbells
+set noautoindent
 set visualbell
 set cursorcolumn
 set nocompatible
@@ -106,7 +107,7 @@ endfunction
 nnoremap <F3> :call ScrollToggle()<CR>
 
 " op
-" nnoremap <space> @=((foldclosed(line( '.' )) < 0)? 'zc' : 'zo')<CR>
+nnoremap <CR> @=((foldclosed(line( '.' )) < 0)? 'zc' : 'zo')<CR>
 nmap ; :
 nnoremap <C-l> <c-w>l
 nnoremap <C-h> <c-w>h
@@ -290,6 +291,12 @@ endfunc
 set tabline=%!Vim_NeatTabLine()
 
 " PlugInstall ------------------------------------
+" smooth-scroll
+noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 2, 5)<CR>
+noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 2, 5)<CR>
+noremap <silent> <c-y> :call smooth_scroll#up(&scroll*2, 5, 10)<CR>
+noremap <silent> <c-e> :call smooth_scroll#down(&scroll*2, 5, 10)<CR>
+
 " ici
 if has('nvim')
     nmap <Leader>yy :IciFrom <CR>
@@ -413,7 +420,7 @@ noremap <F7> :Startify<CR>
 let g:indent_guides_enable_on_vim_startup=1
 let g:indent_guides_start_level=2
 let g:indent_guides_guide_size=1
-nmap <silent> <Leader>i <Plug>IndentGuidesToggle
+nmap <Leader>i <Plug>IndentGuidesToggle
 let g:indent_guides_auto_colors = 0
 autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=red   ctermbg=2
 autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=green ctermbg=6
@@ -445,10 +452,10 @@ let g:tagbar_vertical = 0
 let g:tagbar_sort = 0
 let g:tagbar_compact = 1
 let g:tagbar_autofocus = 1
-map <C-Q> :TagbarToggle<CR>
+map <M-q> :TagbarToggle<CR>
 
 " nerdtree
-map <C-E> :NERDTreeTabsToggle<CR>
+map <M-W> :NERDTreeTabsToggle<CR>
 "map <leader>e :NERDTreeFind<CR>
 "nmap <leader>nt :NERDTreeFind<CR>
 let NERDTreeWinPos="right"
@@ -502,7 +509,7 @@ let g:NERDDefaultAlign = 'left'
 let g:NERDToggleCheckAllLines = 1
 
 " easymotion
-nmap s <Plug>(easymotion-overwin-f)
+nmap <Space> <Plug>(easymotion-overwin-f)
 let g:EasyMotion_use_smartsign_us = 1 " US layout
 let g:EasyMotion_startofline = 0 " keep cursor column when JK motion
 let g:EasyMotion_smartcase = 1
@@ -803,11 +810,11 @@ noremap <C-B> :<C-U><C-R>=printf("Leaderf! rg --current-buffer -e %s ", expand("
 noremap <C-F> :<C-U><C-R>=printf("Leaderf! rg -e %s ", expand("<cword>"))<CR><CR>
 
 " defx
-map <silent><F5> :Defx<CR>
+map <M-w> :Defx<CR>
 call defx#custom#option('_', {
       \ 'winwidth': 30,
       \ 'split': 'vertical',
-      \ 'direction': 'topleft',
+      \ 'direction': 'botright',
       \ 'show_ignored_files': 0,
       \ 'buffer_name': '',
       \ 'toggle': 1,
@@ -937,3 +944,76 @@ nmap <silent><Leader>dd <Plug>(coc-definition)
 nmap <silent><Leader>dt <Plug>(coc-type-definition)
 nmap <silent><Leader>di <Plug>(coc-implementation)
 nmap <silent><Leader>dr <Plug>(coc-references)
+
+" expend
+" escalt.vim    控制台下让用 <M-x> 也可用
+" Author:       lilydjwg <lilydjwg@gmail.com>
+" ---------------------------------------------------------------------
+" Load Once:
+if &cp || exists("g:loaded_escalt") || has("gui_running") || has("win32") || has("win64")
+  finish
+endif
+let s:keepcpo = &cpo
+let g:loaded_escalt = 1
+set cpo&vim
+" ---------------------------------------------------------------------
+" Functions:
+function Escalt_console()
+  for i in range(48, 57) + range(65, 90) + range(97, 122)
+    exe "set <M-".nr2char(i).">=\<Esc>".nr2char(i)
+  endfor
+  " 10, 22, 34, 62, 124 can't be set
+  set <M-,>=,
+  set <M-.>=.
+  set ttimeoutlen=50
+  " xterm keys, may also work in tmux with xterm-keys on
+  set <F1>=OP
+  set <F2>=OQ
+  set <F3>=OR
+  set <F4>=OS
+  set <Home>=OH
+  set <End>=OF
+  set <S-Delete>=[3;2~
+  if exists("$TMUX")
+    set <S-F1>=[1;2P
+    set <S-F2>=[1;2Q
+    set <S-F3>=[1;2R
+    set <S-F4>=[1;2S
+    set <S-F5>=[15;2~
+    set <S-F6>=[17;2~
+    set <S-F7>=[18;2~
+    set <S-F8>=[19;2~
+    set <S-F9>=[20;2~
+    set <S-F10>=[21;2~
+    set <S-F11>=[23;2~
+    set <S-F12>=[24;2~
+    set <Home>=[1~
+    set <End>=[4~
+    " In xterm and tmux
+    " 2 & 3 are Ins and Del, 5 & 6 are PgUp and PgDn
+  elseif &term == 'linux'
+    " Linux console keys, only S-F3 & S-F5 actually works
+    " set <S-F1>=[25~
+    " set <S-F2>=[26~
+    set <S-F3>=[28~
+    " set <S-F4>=[29~
+    set <S-F5>=[31~
+    " set <S-F6>=[32~
+    " set <S-F7>=[33~
+    " set <S-F8>=[34~
+  else
+    set <S-F1>=O1;2P
+    set <S-F2>=O1;2Q
+    set <S-F3>=O1;2R
+    set <S-F4>=O1;2S
+  endif
+endfunction
+" ---------------------------------------------------------------------
+" Call Functions:
+if !has('nvim')
+  call Escalt_console()
+endif
+" ---------------------------------------------------------------------
+" Restoration And Modelines:
+let &cpo= s:keepcpo
+unlet s:keepcpo

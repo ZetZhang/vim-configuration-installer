@@ -70,6 +70,7 @@ Plug 'iamcco/mathjax-support-for-mkdp'
 " Plug 'vim-scripts/VimIM'
 " Plug 'davidhalter/jedi-vim'
 Plug 'Flowerowl/ici.vim'
+Plug 'terryma/vim-smooth-scroll'
 
 "Plug 'ervandew/supertab'
 Plug 'mbbill/undotree'
