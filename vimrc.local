@@ -119,13 +119,18 @@ inoremap <C-j> <Down>
 inoremap <C-k> <Up>
 inoremap <C-a> <Home>
 inoremap <C-e> <End>
-inoremap <C-n> <C-o>o
+inoremap <C-n> <m-o>
 nnoremap <Leader>// :qa!<CR>
 inoremap <C-z> <Esc>ddk$a
 nnoremap <Silent><Leader>q gwip
-inoremap <C-u> <C-o>w<CR>ui
-inoremap <C-b> <C-o>w<CR><C-r>i
+inoremap <c-b> <c-right>
+inoremap <c-v> <c-left>
 nnoremap <ESC> :noh<CR>
+function! AnyToggle()
+    call Fcitx2en()
+    set relativenumber
+endfunction
+inoremap <C-C> <C-C>:call AnyToggle()<CR>
 
 " terminal
 if has('nvim')
@@ -160,7 +165,8 @@ if !has('gui_running')
 set showtabline=1
 nnoremap <Leader>te :tabedit<Space>
 nnoremap <Leader>tN :tabnew<CR>
-nnoremap <Leader>ta :tabs<CR>
+" nnoremap <Leader>ta :tabs<CR>
+nnoremap <Leader>ta :CocList windows<CR>
 " 可以使用Ctrl-pgdn和Ctrl-pgup来代替
 nnoremap <Leader>tn :tabnext<CR>
 nnoremap <Leader>tp :tabNext<CR>
@@ -174,6 +180,7 @@ nnoremap <Leader>tP :tab split<CR>
 nnoremap <Leader>tw :e<Space>
 nnoremap <Leader>ts :sp<Space>
 nnoremap <Leader>tv :vsp<Space>
+nnoremap <Leader>tu :diffsplit<Space>
 nnoremap <Leader>tts :sp<CR>:terminal<CR>i
 nnoremap <Leader>ttv :vsp<CR>:terminal<CR>i
 nnoremap <Leader>1 1gt
@@ -291,6 +298,9 @@ endfunc
 set tabline=%!Vim_NeatTabLine()
 
 " PlugInstall ------------------------------------
+" zenroom2
+nnoremap <Silent><Leader>zz :Goyo<CR>
+
 " smooth-scroll
 noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 2, 5)<CR>
 noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 2, 5)<CR>
@@ -437,8 +447,8 @@ nmap <leader>ses :SessionSave<CR>
 nmap <leader>sec :SessionClose<CR>
 
 " numbers
-"let g:numbers_exclude = ['tagbar', 'gundo', 'minibufexpl', 'nerdtree', 'defx']
-let g:numbers_exclude = []
+" let g:numbers_exclude = ['tagbar', 'gundo', 'minibufexpl', 'nerdtree', 'defx']
+let g:numbers_exclude = ['nerdtree']
 nmap <silent><Leader>,, :<C-u>NumbersToggle<CR>
 
 " rainbow
@@ -490,6 +500,7 @@ let g:NERDTreeIndicatorMapCustom = {
 " autoformat
 noremap <F6> :Autoformat<CR>
 let g:autoformat_verbosemode = 1
+set fo=aw2tq
 " "g:formatdef_clangformat
 
 " nerdcommenter
@@ -527,7 +538,7 @@ let g:AutoPairsMapCh = 0
 " undotree
 "set backup
 "set backupdir=~/.cache/.backup/
-"set noswapfile
+set noswapfile
 "set directory=~/.cache/.swap/
 set undofile
 set undodir=~/.cache/.undo/
@@ -590,9 +601,7 @@ nnoremap <silent> <leader>gr :Gread<CR>
 nnoremap <silent> <leader>gw :Gwrite<CR>
 nnoremap <silent> <leader>ge :Gedit<CR>
 nnoremap <silent> <leader>gg :! tig<CR>
-" Mnemonic _i_nteractive
 nnoremap <silent> <leader>gi :Git add -p %<CR>
-nnoremap <silent> <leader>gg :SignifyToggle<CR>
 
 " airline
 let g:airline_powerline_fonts = 1
@@ -737,7 +746,7 @@ let g:DoxygenToolkit_paramTag_pre="@param  "
 let g:DoxygenToolkit_returnTag="@return   "
 " let g:DoxygenToolkit_blockHeader="--------------------------------------------------------------------------"
 " let g:DoxygenToolkit_blockFooter="----------------------------------------------------------------------------"
-let g:DoxygenToolkit_authorName="Ichheit, <13660591402@163.com>"
+let g:DoxygenToolkit_authorName="Ichheit, <ichheit@outlook.com>"
 let s:licenseTag="\<enter>"
 let s:licenseTag = s:licenseTag . "Copyright © 2020 .\<enter>"
 let s:licenseTag = s:licenseTag . "For Free\<enter>"
@@ -812,16 +821,17 @@ noremap <C-F> :<C-U><C-R>=printf("Leaderf! rg -e %s ", expand("<cword>"))<CR><CR
 " defx
 map <M-w> :Defx<CR>
 call defx#custom#option('_', {
-      \ 'winwidth': 30,
-      \ 'split': 'vertical',
+      \ 'winwidth': 50,
+      \ 'split': 'floating',
       \ 'direction': 'botright',
       \ 'show_ignored_files': 0,
-      \ 'buffer_name': '',
+      \ 'buffer_name': 'DefxTree',
       \ 'toggle': 1,
       \ 'resume': 1,
       \})
 
 autocmd FileType defx call s:defx_mappings()
+autocmd BufWritePost * call defx#redraw()
 function! s:defx_mappings() abort
     nnoremap <silent><buffer><expr> .       defx#do_action('toggle_ignored_files') 
     nnoremap <silent><buffer><expr> <C-r>   defx#do_action('redraw')
@@ -832,6 +842,7 @@ function! s:defx_mappings() abort
     nnoremap <silent><buffer><expr> <CR>    defx#do_action('open_or_close_tree')
     nnoremap <silent><buffer><expr> q       defx#do_action('quit')
     nnoremap <silent><buffer><expr> E       defx#do_action('open', 'vsplit')
+    nnoremap <silent><buffer><expr> t       defx#do_action('open', 'tabnew')
     nnoremap <silent><buffer><expr> k       defx#do_action('new_directory')
     nnoremap <silent><buffer><expr> n       defx#do_action('new_file')
     nnoremap <silent><buffer><expr> d       defx#do_action('remove')
@@ -846,11 +857,9 @@ function! s:defx_mappings() abort
     nnoremap <silent><buffer><expr> *       defx#do_action('toggle_select_all')
     nnoremap <silent><buffer><expr> j       line('.') == line('$') ? 'gg' : 'j'
     nnoremap <silent><buffer><expr> k       line('.') == 1 ? 'G' : 'k'
-    "nnoremap <silent><buffer><expr> P       defx#do_action('open', 'pedit')
-    "nnoremap <silent><buffer><expr> l       defx#do_action('open')
-    "nnoremap <silent><buffer><expr> C       defx#do_action('toggle_columns', 'mark:indent:icon:filename:type:size:time')
-    "nnoremap <silent><buffer><expr> S       defx#do_action('toggle_sort', 'time')
-    "nnoremap <silent><buffer><expr> x       defx#do_action('execute_system')
+    "nnoremap <silent><buffer><expr> C       defx#do_action('toggle_columns', "'mark:indent:icon:filename:type:size:time')
+    nnoremap <silent><buffer><expr> S       defx#do_action('toggle_sort', 'time')
+    nnoremap <silent><buffer><expr> x       defx#do_action('execute_system')
     "nnoremap <silent><buffer><expr> ;       defx#do_action('repeat')
 endfunction
 
@@ -896,6 +905,30 @@ endfunction
 "}"
 
 " ------------------depend-----------------
+" auto fcitx
+" let g:input_toggle = 1
+function! Fcitx2en()
+   let s:input_status = system("fcitx-remote")
+   if s:input_status == 2
+      " let g:input_toggle = 1
+      let l:a = system("fcitx-remote -c")
+   endif
+endfunction
+
+" function! Fcitx2zh()
+"    let s:input_status = system("fcitx-remote")
+"    if s:input_status != 2 && g:input_toggle == 1
+"       let l:a = system("fcitx-remote -o")
+"       let g:input_toggle = 0
+"    endif
+" endfunction
+
+set ttimeoutlen=150
+"退出插入模式
+autocmd InsertLeave * call Fcitx2en()
+"进入插入模式
+" autocmd InsertEnter * call Fcitx2zh()
+
 " fzf
 nnoremap <silent> <Leader>vf :Files<CR>
 nnoremap <silent> <Leader>vL :Locate<Space>
@@ -903,7 +936,8 @@ nnoremap <silent> <Leader>vgf :GFiles<CR>
 nnoremap <silent> <Leader>vl :Lines<CR>
 nnoremap <silent> <Leader>vbl :BLines<CR>
 nnoremap <silent> <Leader>va :Rg<CR>
-nnoremap <silent> <Leader>vm :Marks<CR>"
+nnoremap <silent> <Leader>vm :Marks<CR>
+nnoremap <silent> <Leader>vh :Maps<CR>
 nnoremap <silent> <Leader>vr :<C-U><C-R>=printf("Rg %s ", expand("<cword>"))<CR><CR>
 " [Buffers] Jump to the existing window if possible
 let g:fzf_buffers_jump = 1
@@ -937,13 +971,49 @@ nmap <leader>fm  <Plug>(coc-format-selected)
 " Add status line support, for integration with other plugin, checkout `:h coc-status`
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 " navigate diagnostics
-nmap <silent><Leader>dp <Plug>(coc-diagnostic-prev)
-nmap <silent><Leader>dn <Plug>(coc-diagnostic-next)
+nmap <silent>[g <Plug>(coc-diagnostic-prev)
+nmap <silent>]g <Plug>(coc-diagnostic-next)
 " Remap keys for gotos
 nmap <silent><Leader>dd <Plug>(coc-definition)
 nmap <silent><Leader>dt <Plug>(coc-type-definition)
 nmap <silent><Leader>di <Plug>(coc-implementation)
 nmap <silent><Leader>dr <Plug>(coc-references)
+" Use K to show documentation in preview window.
+nnoremap <silent><Leader>ok :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+" Symbol renaming.
+nmap <leader>or <Plug>(coc-rename)
+" Show all diagnostics.
+nnoremap <leader>oe  :<C-u>CocList diagnostics<cr>
+" Find symbol of current document.
+nnoremap <leader>oo  :<C-u>CocList outline<cr>
+" Search workspace symbols.
+nnoremap <leader>os  :<C-u>CocList -I symbols<cr>
+" tags
+nnoremap <leader>ot  :<C-u>CocList tags<cr>
+" files
+nnoremap <leader>os  :<C-u>CocList files<cr>
+
+augroup mygroup
+  autocmd!
+  " Setup formatexpr specified filetype(s).
+  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+  " Update signature help on jump placeholder.
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+augroup end
+" Add (Neo)Vim's native statusline support.
+" NOTE: Please see `:h coc-status` for integrations with external plugins that
+" provide custom statusline: lightline.vim, vim-airline.
+set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+" Apply AutoFix to problem on the current line.
+nmap <leader>.  <Plug>(coc-fix-current)
 
 " expend
 " escalt.vim    控制台下让用 <M-x> 也可用

@@ -1,15 +1,15 @@
 call plug#begin('~/.vim/plugged')
-" 定义插件，默认用法，和 Vundle 的语法差不多
 Plug 'junegunn/vim-easy-align'
+Plug 'junegunn/fzf.vim'
+"Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/goyo.vim'
+Plug 'amix/vim-zenroom2'
+Plug 'skywind3000/asyncrun.vim'
 Plug 'skywind3000/quickmenu.vim'
-" 延迟按需加载，使用到命令的时候再加载或者打开对应文件类型才加载
-Plug 'scrooloose/nerdtree' " , { 'on':  'NERDTreeToggle' }
-Plug 'jistr/vim-nerdtree-tabs'
-Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
-" 确定插件仓库中的分支或者 tag
-Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
-Plug 'nsf/gocode', { 'tag': 'v.20150303', 'rtp': 'vim' }
-" 辣鸡defx
+Plug 'scrooloose/nerdtree'
+Plug 'jistr/vim-nerdtree-tabs' , { 'on':  'NERDTreeToggle' }
+Plug 'scrooloose/nerdcommenter'
+Plug 'majutsushi/tagbar'
 if has('nvim')
     Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins'  }
 else
@@ -17,12 +17,16 @@ else
     Plug 'roxma/nvim-yarp'
     Plug 'roxma/vim-hug-neovim-rpc'
 endif
-
 Plug 'MarcWeber/vim-addon-mw-utils'
 Plug 'tomtom/tlib_vim'
 Plug 'garbas/vim-snipmate'
-" Optional:
 Plug 'honza/vim-snippets'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-obsession'
+Plug 'godlygeek/tabular'
+Plug 'Chiel92/vim-autoformat'
+Plug 'jiangmiao/auto-pairs'
+Plug 'easymotion/vim-easymotion'
 
 Plug 'luochen1990/rainbow'
 Plug 'morhetz/gruvbox'
@@ -30,32 +34,22 @@ Plug 'morhetz/gruvbox'
 " Plug 'icymind/NeoSolarized'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+" Plug 'itchyny/lightline.vim'
+Plug 'lilydjwg/colorizer'
 
-Plug 'tpope/vim-fugitive'
-Plug 'godlygeek/tabular'
-Plug 'Chiel92/vim-autoformat'
-Plug 'jiangmiao/auto-pairs'
-Plug 'majutsushi/tagbar'
-Plug 'scrooloose/nerdcommenter'
-Plug 'easymotion/vim-easymotion'
 Plug 'octol/vim-cpp-enhanced-highlight'
 Plug 'vim-scripts/DoxygenToolkit.vim'
-Plug 'skywind3000/asyncrun.vim'
 Plug 'universal-ctags/ctags'
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'dense-analysis/ale'
 Plug 'Shougo/echodoc.vim'
 
-Plug 'tpope/vim-obsession'
 " ~/.wakkatime.cfg
 Plug 'wakatime/vim-wakatime'
-Plug 'idanarye/vim-vebugger'
-" help vebugger-launching & help vebugger-usage
 Plug 'myusuf3/numbers.vim'
 Plug 'vim-scripts/sessionman.vim'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'mhinz/vim-startify'
-Plug 'lilydjwg/colorizer'
 Plug 'aklt/plantuml-syntax'
 Plug 'weirongxu/plantuml-previewer.vim'
 Plug 'tyru/open-browser.vim'
@@ -67,20 +61,18 @@ else
     Plug 'iamcco/markdown-preview.vim'
 endif
 Plug 'iamcco/mathjax-support-for-mkdp'
-" Plug 'vim-scripts/VimIM'
-" Plug 'davidhalter/jedi-vim'
 Plug 'Flowerowl/ici.vim'
 Plug 'terryma/vim-smooth-scroll'
+
+Plug 'cespare/vim-toml'
+Plug 'terryma/vim-expand-region'
 
 "Plug 'ervandew/supertab'
 Plug 'mbbill/undotree'
 Plug 'tpope/vim-surround'
-" -- depend --
 Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
 Plug 'rking/ag.vim'
 Plug '/usr/bin/fzf'
-Plug 'junegunn/fzf.vim'
-"Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 " Plug 'ycm-core/YouCompleteMe'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
