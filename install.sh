@@ -29,6 +29,7 @@ fi
 
 # universal-ctags & fzf & ag & ccls & yarn
 sudo pacman -S --noconfirm --needed {universal-ctags-git,fzf,the_silver_searcher,ccls,yarn}
+pip3 install ici
 
 # PlugInstall
 if [ -f ~/.hci/.h1 ]; then
@@ -41,6 +42,8 @@ if [ -f ~/.hci/.h1 ]; then
 fi
 
 [ -f ~/.hci/.h2 ] && vim +PlugInstall +all 
+[ -f ~/.vim/plugged/asynctasks.vim/bin/asynctask ] && cp ~/.tasks ~/.vim/tasks.ini
+ln -sf ~/.vim/tasks.ini ~/.config/nvim/tasks.ini
 mv ~/.hci/.h2 ~/.hci/.h3
 
 # install coc.nvim

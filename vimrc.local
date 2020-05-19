@@ -25,7 +25,7 @@ let g:mapleader = ','
 set tabpagemax=20               " Only show 15 tabs
 set showmode                    " Display the current mode
 set cursorline                  " Highlight current line
-highlight clear SignColumn      " SignColumn should match background
+" highlight clear SignColumn      " SignColumn should match background
 highlight clear LineNr          " Current line
 set backspace=indent,eol,start  " Backspace for dummies
 set linespace=0                 " No extra spaces between rows
@@ -56,13 +56,6 @@ set nojoinspaces                " Prevents inserting two spaces after punctuatio
 set splitright                  " Puts new vsplit windows to the right of the current
 set splitbelow                  " Puts new split windows to the bottom of the current
 set pastetoggle=<F12>           " pastetoggle (sane indentation on pastes)
-" autocmd FileType c,cpp,java,go,php,javascript,puppet,python,rust,twig,xml,yml,perl,sql autocmd BufWritePre <buffer> if !exists('g:spf13_keep_trailing_whitespace') | call StripTrailingWhitespace() | endif
-" autocmd FileType go autocmd BufWritePre <buffer> Fmt
-" autocmd BufNewFile,BufRead *.html.twig set filetype=html.twig
-" autocmd FileType haskell,puppet,ruby,yml setlocal expandtab shiftwidth=2 softtabstop=2
-" autocmd BufNewFile,BufRead *.coffee set filetype=coffee
-" autocmd FileType haskell setlocal commentstring=--\ %s
-" autocmd FileType haskell,rust setlocal nospell
 
 " Code folding options
 nmap <leader>f0 :set foldlevel=0<CR>
@@ -105,6 +98,7 @@ function! ScrollToggle()
     endif
 endfunction
 nnoremap <F3> :call ScrollToggle()<CR>
+nnoremap <Leader>p :registers<CR>
 
 " op
 nnoremap <CR> @=((foldclosed(line( '.' )) < 0)? 'zc' : 'zo')<CR>
@@ -121,6 +115,7 @@ inoremap <C-a> <Home>
 inoremap <C-e> <End>
 inoremap <C-n> <m-o>
 nnoremap <Leader>// :qa!<CR>
+nnoremap <Leader>/W :w !sudo tee %<CR>
 inoremap <C-z> <Esc>ddk$a
 nnoremap <Silent><Leader>q gwip
 inoremap <c-b> <c-right>
@@ -298,8 +293,51 @@ endfunc
 set tabline=%!Vim_NeatTabLine()
 
 " PlugInstall ------------------------------------
+" quickui
+let g:guickui_color_scheme = 'borland'
+" 清楚所有目录项目
+call quickui#menu#reset()
+" 安装一个 File 目录，使用 [名称，命令] 的格式表示各个选项。
+call quickui#menu#install('&File', [
+            \ [ "&New File\tL-te", 'call feedkeys(":tabe ")' ],
+            \ [ "&Open File\t;w", 'echo 1' ],
+            \ [ "&Close\tL-/", "q" ],
+            \ [ "--", '' ],
+            \ [ "&Save\tCtrl+s", 'echo 3'],
+            \ [ "Save &As", 'echo 4' ],
+            \ [ "Save All", 'echo 5' ],
+            \ [ "--", '' ],
+            \ [ "E&xit\tAlt+x", 'echo 6' ],
+            \ ])
+" 每个项目还可以多包含一个字段，表示它的帮助文档，光标过去时会被显示到最下方的命令行
+call quickui#menu#install('&Edit', [
+            \ [ '&Copy', 'echo 1', 'help 1' ],
+            \ [ '&Paste', 'echo 2', 'help 2' ],
+            \ [ '&Find', 'echo 3', 'help 3' ],
+            \ ])
+" 在 %{...} 内的脚本会被求值并展开成字符串
+call quickui#menu#install("&Option", [
+			\ ['Set &Spell %{&spell? "Off":"On"}', 'set spell!'],
+			\ ['Set &Cursor Line %{&cursorline? "Off":"On"}', 'set cursorline!'],
+			\ ['Set &Paste %{&paste? "Off":"On"}', 'set paste!'],
+			\ ])
+" install 命令最后可以加一个“权重”系数，
+" 用于决定目录位置，权重越大越靠右，越小越靠左
+call quickui#menu#install('H&elp', [
+			\ ["&Cheatsheet", 'help index', ''],
+			\ ['T&ips', 'help tips', ''],
+			\ ['--',''],
+			\ ["&Tutorial", 'help tutor', ''],
+			\ ['&Quick Reference', 'help quickref', ''],
+			\ ['&Summary', 'help summary', ''],
+			\ ], 10000)
+" 打开下面选项，允许在 vim 的下面命令行部分显示帮助信息
+let g:quickui_show_tip = 1
+" 定义按两次空格就打开上面的目录
+noremap <space><space> :call quickui#menu#open()<cr>
+
 " zenroom2
-nnoremap <Silent><Leader>zz :Goyo<CR>
+nnoremap <Leader>zz :Goyo<CR>
 
 " smooth-scroll
 noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 2, 5)<CR>
@@ -309,11 +347,12 @@ noremap <silent> <c-e> :call smooth_scroll#down(&scroll*2, 5, 10)<CR>
 
 " ici
 if has('nvim')
-    nmap <Leader>yy :IciFrom <CR>
+    nmap <Leader>yy :AsyncTask ici<CR>
+    nmap <Leader>ys :AsyncTask ici-word<CR>
 else
-    nmap <Leader>yy :! echo --==<C-R><C-W>==-- ;ici <C-R><C-W><CR>
+    nmap <Leader>yy :! echo --==<C-R><C-W>==--; ici <C-R><C-W><CR>
+    nmap <Leader>ys :! echo "--==<NONE>==--"; ici<Space>
 endif
-nmap <Leader>ys :Ici<Space>
 
 " surround
 nmap <Leader>sw ysiw
@@ -699,23 +738,97 @@ let g:asyncrun_rootmarks = ['.svn', '.git', '.root', '_darcs', 'build.xml']
 " 在项目主目录生成.tags
 " ctags -R --c++-kinds=+p --fields=+iaS --extras=+q --output-format=e-ctags -f ./.tags
 " set tags=./.tags;,.tags
-nnoremap <silent><Leader>ri :AsyncRun -raw ctags -R --c++-kinds=+p --fields=+iaS --extras=+q --output-format=e-ctags -f "$(VIM_ROOT)/.tags" <CR>
+nnoremap <Leader>ri :AsyncTask ctags-update<CR>
 nnoremap <silent><C-\> :call asyncrun#quickfix_toggle(6)<CR>
 map <F10> <Leader>ri<C-W><C-]><C-\>
 " 单文件编译运行
-nnoremap <silent><Leader>mr :AsyncRun -raw "$(VIM_FILEDIR)/$(VIM_FILENOEXT)"<CR>
-nnoremap <Leader>md :AsyncRun -raw rm -f "$(VIM_FILEDIR)/$(VIM_FILENOEXT)"<CR>
-nnoremap <Leader>msb :AsyncRun -raw gcc -Wall -O4 "$(VIM_FILEPATH)" -o "$(VIM_FILEDIR)/$(VIM_FILENOEXT)"<CR>
-nnoremap <Leader>msd :AsyncRun -raw gcc -Wall -g "$(VIM_FILEPATH)" -o "$(VIM_FILEDIR)/$(VIM_FILENOEXT)"<CR>
-nnoremap <Leader>mmb :AsyncRun -raw g++ -std=c++14 -Wall -O4 "$(VIM_FILEPATH)" -o "$(VIM_FILEDIR)/$(VIM_FILENOEXT)"<CR>
-nnoremap <Leader>mmd :AsyncRun -raw g++ -std=c++14 -Wall -g "$(VIM_FILEPATH)" -o "$(VIM_FILEDIR)/$(VIM_FILENOEXT)"<CR>
+nnoremap <Leader>mr :AsyncTask file-run<CR>
+nnoremap <Leader>mra :AsyncTask file-run-arg<CR>
+nnoremap <Leader>mc :AsyncTask file-drop<CR>
+nnoremap <Leader>md :AsyncTask file-build-debug<CR>
+nnoremap <Leader>mb :AsyncTask file-build<CR>
 " 项目文件编译运行
-nnoremap <silent><Leader>mcc :AsyncRun -raw -cwd="$(VIM_ROOT)" cmake -B "$(VIM_ROOT)/build/" . <CR>
+nnoremap <Leader>mcc :AsyncTask cmake-file-build<CR>
 " 可以是make run，要先cmake配置add_custom_target
-nnoremap <silent><Leader>mca :AsyncRun -raw -cwd="$(VIM_ROOT)" make -j8 -C "$(VIM_ROOT)/build/" <CR>
-nnoremap <silent><Leader>mcb :AsyncRun -raw -cwd="$(VIM_ROOT)" make -j8 -C "$(VIM_ROOT)/build/" "$(VIM_FILENOEXT)" <CR>
-nnoremap <silent><Leader>mct :AsyncRun -raw -cwd="$(VIM_ROOT)" make -j8 -C "$(VIM_ROOT)/build/" test <CR>
-nnoremap <Leader>mcd :AsyncRun -raw -cwd="$(VIM_ROOT)" make -j8 -C "$(VIM_ROOT)/build/" clean <CR>
+nnoremap <Leader>mca :AsyncTask make-file-build<CR>
+nnoremap <Leader>mcb :AsyncTask make-file-build-debug<CR>
+nnoremap <Leader>mct :AsyncTask make-file-test<CR>
+nnoremap <Leader>mcd :AsyncTask make-file-clean<CR>
+
+" AsyncTask
+" quickfix、vim、tab、top、bottom、left、right、external
+let g:asynctasks_term_pos="bottom"
+let g:asynctasks_term_focus=0
+let g:asynctasks_term_reuse=1
+let g:asynctasks_confirm=1
+let g:asynctasks_template = {}
+let g:asynctasks_template.cargo = [
+            \ "[project-init]",
+            \ "command=cargo update",
+            \ "cwd=<root>",
+            \ "",
+            \ "[project-build]",
+            \ "command=cargo build",
+            \ "cwd=<root>",
+            \ "errorformat=%. %#--> %f:%l:%c",
+            \ "",
+            \ "[project-run]",
+            \ "command=cargo run",
+            \ "cwd=<root>",
+            \ "output=terminal",
+            \ ]
+nnoremap <Leader>eel :AsyncTaskEdit<CR>
+nnoremap <Leader>eeg :AsyncTaskEdit!<CR>
+nnoremap <Leader>ec :AsyncTaskMacro<CR>
+nnoremap <Leader>el :AsyncTaskList<CR>
+nnoremap <Leader>eq :AsyncTask<Space>
+
+function! s:lf_task_source(...)
+	let rows = asynctasks#source(&columns * 48 / 100)
+	let source = []
+	for row in rows
+		let name = row[0]
+		let source += [name . '  ' . row[1] . '  : ' . row[2]]
+	endfor
+	return source
+endfunction
+
+function! s:lf_task_accept(line, arg)
+	let pos = stridx(a:line, '<')
+	if pos < 0
+		return
+	endif
+	let name = strpart(a:line, 0, pos)
+	let name = substitute(name, '^\s*\(.\{-}\)\s*$', '\1', '')
+	if name != ''
+		exec "AsyncTask " . name
+	endif
+endfunction
+
+function! s:lf_task_digest(line, mode)
+	let pos = stridx(a:line, '<')
+	if pos < 0
+		return [a:line, 0]
+	endif
+	let name = strpart(a:line, 0, pos)
+	return [name, 0]
+endfunction
+
+function! s:lf_win_init(...)
+	setlocal nonumber
+	setlocal nowrap
+endfunction
+
+let g:Lf_Extensions = get(g:, 'Lf_Extensions', {})
+let g:Lf_Extensions.task = {
+			\ 'source': string(function('s:lf_task_source'))[10:-3],
+			\ 'accept': string(function('s:lf_task_accept'))[10:-3],
+			\ 'get_digest': string(function('s:lf_task_digest'))[10:-3],
+			\ 'highlights_def': {
+			\     'Lf_hl_funcScope': '^\S\+',
+			\     'Lf_hl_funcDirname': '^\S\+\s*\zs<.*>\ze\s*:',
+			\ },
+		\ }
 
 " browser
 " use google chrome instaad of default broswer
@@ -734,11 +847,9 @@ let g:openbrowser_search_engines = {
 nnoremap <Leader>hh :OpenBrowser<Space>
 nnoremap <Leader>hs :OpenBrowserSmartSearch<Space>-baidu<Space>
 vmap hs <Plug>(openbrowser-smart-search)
-" with AsyncRun
-nnoremap <silent><Leader>hf :AsyncRun -raw firefox "$(VIM_FILEDIR)/$(VIM_FILE)" &<CR>
-nnoremap <silent><Leader>hc :AsyncRun -raw google-chrome-stable "$(VIM_FILEDIR)/$(VIM_FILE)" &<CR>
-nnoremap <silent><Leader>hpf :AsyncRun -raw firefox &<CR>
-nnoremap <silent><Leader>hpc :AsyncRun -raw google-chrome-stable &<CR>
+" with AsyncTask
+nnoremap <silent><Leader>hf :AsyncTask browser-open-firefox<CR>
+nnoremap <silent><Leader>hc :AsyncTask browser-open-chrome<CR>
 
 " doxygen
 let g:DoxygenToolkit_briefTag_pre="@brief  "
@@ -805,18 +916,19 @@ let g:Lf_StlSeparator = { 'left': "\ue0b0", 'right': "\ue0b2", 'font': "DejaVu S
 let g:Lf_PreviewResult = {'Function': 0, 'BufTag': 0 }
 
 let g:Lf_ShortcutF = '<Leader>ll'
-noremap <Leader>lb :<C-U><C-R>=printf("Leaderf buffer %s", "")<CR><CR>
+noremap <Leader>lb :<C-U><C-R>=printf("Leaderf buffer --popup %s", "")<CR><CR>
 noremap <Leader>lm :<C-U><C-R>=printf("Leaderf mru %s", "")<CR><CR>
 noremap <Leader>lt :<C-U><C-R>=printf("Leaderf bufTag %s", "")<CR><CR>
 noremap <Leader>la :<C-U><C-R>=printf("Leaderf line %s", "")<CR><CR>
-noremap <Leader>lw :<C-U><C-R>=printf("Leaderf window %s", "")<CR><CR>
+noremap <Leader>lw :<C-U><C-R>=printf("Leaderf window --popup %s", "")<CR><CR>
 noremap <Leader>lf :<C-U><C-R>=printf("Leaderf function %s", "")<CR><CR>
-noremap <Leader>lc :<C-U><C-R>=printf("Leaderf command %s", "")<CR><CR>
+noremap <Leader>lc :<C-U><C-R>=printf("Leaderf command --popup %s", "")<CR><CR>
 noremap <silent><Leader>lr :LeaderfRgInteractive<CR>
 xnoremap gf :<C-U><C-R>=printf("Leaderf! rg -f -e %s ", leaderf#Rg#visual())<CR>
 noremap go :<C-U>Leaderf! rg --recall<CR>
 noremap <C-B> :<C-U><C-R>=printf("Leaderf! rg --current-buffer -e %s ", expand("<cword>"))<CR><CR>
 noremap <C-F> :<C-U><C-R>=printf("Leaderf! rg -e %s ", expand("<cword>"))<CR><CR>
+noremap <F5> :<C-U><C-R>=printf("Leaderf --nowrap --popup %s", "task")<CR><CR>
 
 " defx
 map <M-w> :Defx<CR>
@@ -870,39 +982,6 @@ function! s:defx_toggle_tree() abort
     endif
     return defx#do_action('multi', ['drop'])
 endfunction
-
-" YCM
-"let g:ycm_add_preview_to_completeopt = 0
-"let g:ycm_show_diagnostics_ui = 0
-"let g:ycm_server_log_level = 'info'
-"let g:ycm_min_num_identifier_candidate_chars = 2
-"let g:ycm_collect_identifiers_from_comments_and_strings = 1
-"let g:ycm_complete_in_strings=1
-"set completeopt=menu,menuone
-
-"if has('patch-8.0.1000')
-    "set completeopt=menu,menuone,noselect
-"endif
-"let g:ycm_semantic_triggers =  {
-            "\ 'c,cpp,python,java,go,erlang,perl,rust': ['re!\w{2}'],
-            "\ 'cs,lua,javascript': ['re!\w{2}'],
-            "\ }"
-"}
-" -family
-"let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/.ycm_extra_conf.py'
-"let g:acp_enableAtStartup = 0
-"let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
-"" let g:ycm_key_invoke_completion = '<c-z>'
-"let g:ycm_collect_identifiers_from_tags_files = 1
-"let g:ycm_seed_identifiers_with_syntax = 1
-"let g:ycm_confirm_extra_conf = 0
-"let g:ycm_cache_omnifunc=0
-"" noremap <c-z> <NOP>
-"let g:ycm_semantic_triggers =  {
-            "\ 'c,cpp,python,java,go,erlang,perl,rust': ['re!\w{2}'],
-            "\ 'cs,lua,javascript': ['re!\w{2}'],
-            "\ }
-"}"
 
 " ------------------depend-----------------
 " auto fcitx

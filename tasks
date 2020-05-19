@@ -1,0 +1,150 @@
+# build & run
+[file-build]
+command:cpp=g++ -std=c++14 -Wall -O4 "$(VIM_FILEPATH)" -o "$(VIM_PATHNOEXT)"
+command:c=gcc -O2 -Wall "$(VIM_FILEPATH)" -o "$(VIM_PATHNOEXT)" -lstdc++ -lm -msse3
+command:go=go build -o "$(VIM_PATHNOEXT)" "$(VIM_FILEPATH)"
+command:make=make -f "$(VIM_FILEPATH)"
+cwd=$(VIM_FILEDIR)
+output=quickfix
+errorformat=%f:%l:%m
+save=2
+
+[file-build-debug]
+command:cpp=g++ -std=c++14 -Wall -g "$(VIM_FILEPATH)" -o "$(VIM_FILEDIR)/$(VIM_FILENOEXT)"<CR>
+command:c=gcc -Wall -g "$(VIM_FILEPATH)" -o "$(VIM_FILEDIR)/$(VIM_FILENOEXT)"<CR>
+cwd=$(VIM_FILEDIR)
+output=quickfix
+errorformat=%f:%l:%m
+save=2
+
+[file-run]
+command="$(VIM_FILEDIR)/$(VIM_FILENOEXT)"
+command:c,cpp="$(VIM_PATHNOEXT)"
+command:go="$(VIM_PATHNOEXT)"
+command:python=python "$(VIM_FILENAME)"
+command:javascript=node "$(VIM_FILENAME)"
+command:sh=sh "$(VIM_FILENAME)"
+command:lua=lua "$(VIM_FILENAME)"
+command:perl=perl "$(VIM_FILENAME)"
+command:ruby=ruby "$(VIM_FILENAME)"
+output=quickfix
+cwd=$(VIM_FILEDIR)
+
+[file-run-arg]
+command:c,cpp="$(VIM_PATHNOEXT)" $(?argument)
+output=quickfix
+cwd=$(VIM_FILEDIR)
+
+[file-drop]
+command=rm -f "$(VIM_FILEDIR)/$(VIM_FILENOEXT)"
+output=terminal
+
+[cmake-file-build]
+command:c,cpp=cmake -B "$(VIM_ROOT)/build/" .
+output=quickfix
+cwd=$(VIM_ROOT)
+save=2
+
+[make-file-build]
+command:c,cpp=make -j8 -C "$(VIM_ROOT)/build/"
+output=quickfix
+cwd=$(VIM_ROOT)
+save=2
+
+[make-file-build-debug]
+command:c,cpp=make -j8 -C "$(VIM_ROOT)/build/" "$(VIM_FILENOEXT)"
+output=quickfix
+cwd=$(VIM_ROOT)
+save=2
+
+[make-file-test]
+command:c,cpp=make -j8 -C "$(VIM_ROOT)/build/" test
+output=quickfix
+cwd=$(VIM_ROOT)
+
+[make-file-clean]
+command:c,cpp=make -j8 -C "$(VIM_ROOT)/build/" clean
+output=quickfix
+cwd=$(VIM_ROOT)
+
+# ctags
+[ctags-update]
+command:c,cpp=ctags -R --c++-kinds=+p --fields=+iaS --extras=+q --output-format=e-ctags -f "$(VIM_ROOT)/.tags"
+output=quickfix
+cwd=$(VIM_ROOT)
+save=2
+
+# ici
+[ici]
+command=ici "$(VIM_CWORD)"
+output=terminal
+
+[ici-word]
+command=ici $(?what word)
+output=terminal
+
+# browser
+[browser-open-firefox]
+command=firefox $(?open-file:$(VIM_FILENAME))
+output=quickfix
+cwd=$(VIM_FILEDIR)
+save=2
+
+[browser-open-chrome]
+command=google-chrome-stable $(?open-file:$(VIM_FILENAME))
+output=quickfix
+cwd=$(VIM_FILEDIR)
+save=2
+
+# tcpdump
+[tcpdump-listen]
+command=echo $(?PWD !Warn) | sudo -S tcpdump -ntv -i $(?interface:lo) -nn -vvv -X tcp and port $(?port)
+output=terminal
+
+[tcpdump-listen-write-file]
+command=echo $(?PWD !Warn) | sudo -S sudo tcpdump -w $(?save-tcpdump-file:lo) -ntv -i $(?interface) -nn -vvv -X tcp and port $(?port)
+output=terminal
+
+[tcpdump-listen-read-file]
+command=echo $(?PWD !Warn) | sudo -S tcpdump -r $(?read-tcpdump-file:lo) -N
+output=terminal
+
+[show-myip]
+command=curl myip.ipip.net
+output=quickfix
+
+# server
+[quickly-build-tcpserver]
+command=nc -v -w $(?timeout) -tl $(?host:localhost) -p $(?port:12307)
+output=terminal
+
+[quickly-build-udpserver]
+command=nc -v -w $(?timeout) -ul $(?host:localhost) -p $(?port:12307)
+
+[quickly-search-pid-by-port]
+command=netstat -anp | grep $(?port)
+output=quickfix
+
+[quickly-search-port]
+command=netstat -tunl | grep $(?port)
+output=quickfix
+
+# normal
+[arch-install]
+command=sudo pacman -S --needed --noconfirm $(?software)
+output=terminal
+
+# doc-search
+[cpp-find-sysetm-label]
+command=echo $(?PWD !Warn) | sudo -S grep -Rn --color=auto --include="*.h" --include="*.c" --include="*.cc" --include="*.inc" '$(?search-label)' /usr
+output=quickfix
+
+# git clone
+[git-clone]
+command=git clone -b master --depth=1 $(?url)
+output=terminal
+
+# fzf
+[fzf]
+command=fzf --preview '[[ $(file --mime {}) =~ binary ]] && echo {} is a binary file || (bat --style=numbers --color=always {} || highlight -O ansi -l {} || coderay {} || rougify {} || cat {}) 2> /dev/null | head -500'
+output=terminal
