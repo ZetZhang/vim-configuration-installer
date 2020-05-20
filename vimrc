@@ -31,9 +31,17 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'easymotion/vim-easymotion'
 
 Plug 'luochen1990/rainbow'
+Plug 'ujihisa/tabpagecolorscheme'
 Plug 'morhetz/gruvbox'
-" Plug 'altercation/vim-colors-solarized'
-" Plug 'icymind/NeoSolarized'
+Plug 'NLKNguyen/papercolor-theme'
+Plug 'tomasr/molokai'
+Plug 'dracula/vim', { 'as': 'dracula' }
+Plug 'sonph/onehalf', {'rtp': 'vim/'}
+Plug 'chriskempson/base16-vim'
+Plug 'sjl/badwolf'
+Plug 'kristijanhusak/vim-hybrid-material'
+Plug 'relastle/bluewery.vim'
+
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 " Plug 'itchyny/lightline.vim'
@@ -63,11 +71,12 @@ else
     Plug 'iamcco/markdown-preview.vim'
 endif
 Plug 'iamcco/mathjax-support-for-mkdp'
-Plug 'Flowerowl/ici.vim'
 Plug 'terryma/vim-smooth-scroll'
 
 Plug 'cespare/vim-toml'
 Plug 'terryma/vim-expand-region'
+Plug 'cpiger/neodebug'
+Plug 'puremourning/vimspector'
 
 "Plug 'ervandew/supertab'
 Plug 'mbbill/undotree'

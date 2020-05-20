@@ -1,10 +1,96 @@
 " General
-set background=dark
 filetype plugin indent on   " Automatically detect file types.
 syntax on                   " Syntax highlighting
 set mouse=a                 " Automatically enable mouse usage
 set mousehide               " Hide the mouse cursor while typing
+set encoding=utf-8
 scriptencoding utf-8
+" set shellcmdflag=-ic
+
+" spellbad
+" Force to use underline for spell check results
+augroup SpellUnderline
+    autocmd!
+    autocmd ColorScheme *
+                \ highlight SpellBad
+                \   cterm=Underline
+                \   ctermfg=NONE
+                \   ctermbg=NONE
+                \   term=Reverse
+                \   gui=Undercurl
+                \   guisp=Red
+    autocmd ColorScheme *
+                \ highlight SpellCap
+                \   cterm=Underline
+                \   ctermfg=NONE
+                \   ctermbg=NONE
+                \   term=Reverse
+                \   gui=Undercurl
+                \   guisp=Red
+    autocmd ColorScheme *
+                \ highlight SpellLocal
+                \   cterm=Underline
+                \   ctermfg=NONE
+                \   ctermbg=NONE
+                \   term=Reverse
+                \   gui=Undercurl
+                \   guisp=Red
+    autocmd ColorScheme *
+                \ highlight SpellRare
+                \   cterm=Underline
+                \   ctermfg=NONE
+                \   ctermbg=NONE
+                \   term=Reverse
+                \   gui=Undercurl
+                \   guisp=Red
+augroup END
+" gruvbox | PaperColor | molokai | dracula | onehalfdark | base16 family 
+" hybrid_{reverse|material} | base16-snazzy | base16-oceanic | bluewey | nord
+colorscheme molokai
+set background=dark
+if exists('+termguicolors')
+    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+    set termguicolors
+endif
+if (!match(g:colors_name, "gruvbox"))
+elseif (!match(g:colors_name, "dracula"))
+elseif (!match(g:colors_name, "molokai"))
+    let g:molokai_original = 1
+    let g:rehash256 = 1
+elseif (!match(g:colors_name, "PaperColor"))
+elseif (!match(g:colors_name, "onehalfdark"))
+    let g:airline_theme='onehalfdark'
+    echo g:colors_name
+elseif (!match(g:colors_name, "badwolf"))
+    " Make the gutters darker than the background.
+    let g:badwolf_darkgutter = 1
+    " 1 / 2 / 3 / 4
+    let g:badwolf_tabline = 4
+    let g:badwolf_html_link_underline = 1
+    " Turn on CSS properties highlighting
+    let g:badwolf_css_props_highlight = 1
+elseif (!match(g:colors_name, "hybrid_reverse"))
+elseif (!match(g:colors_name, "base16-snazzy"))
+    GOTO B16
+elseif (!match(g:colors_name, "base16-oceanic"))
+    GOTO B16
+elseif (!match(g:colors_name, "bluewery"))
+    let g:lightline = { 'colorscheme': 'bluewery' }
+elseif (!match(g:colors_name, "base16-nord"))
+    GOTO B16
+elseif (!match(g:colors_name, "base16"))
+LABEL B16:
+    let base16colorspace=256  " Access colors present in 256 colorspace
+    function! s:base16_customize() abort
+        call Base16hi("MatchParen", g:base16_gui05, g:base16_gui03, g:base16_cterm05, g:base16_cterm03, "bold,italic", "")
+    endfunction
+
+    augroup on_change_colorschema
+        autocmd!
+        autocmd ColorScheme * call s:base16_customize()
+    augroup END
+endif
 
 set autoread
 " set autowrite
@@ -20,7 +106,6 @@ set iskeyword-=#                    " '#' is an end of word designator
 set iskeyword-=-                    " '-' is an end of word designator
 
 " UI
-colorscheme gruvbox
 let g:mapleader = ','
 set tabpagemax=20               " Only show 15 tabs
 set showmode                    " Display the current mode
@@ -293,6 +378,9 @@ endfunc
 set tabline=%!Vim_NeatTabLine()
 
 " PlugInstall ------------------------------------
+" vimspector
+" let g:vimspector_enable_mappings = 'HUMAN'
+
 " quickui
 let g:guickui_color_scheme = 'borland'
 " 清楚所有目录项目
@@ -648,10 +736,7 @@ if !exists('g:airline_symbols')
     let g:airline_symbols = {}
 endif
 set t_Co=256
-"let g:airline_theme="jellybeans"
-"let g:airline_theme="serene"
-let g:airline_theme="qwq"
-"let g:iarline_theme="simple"
+let g:airline_theme="dark"
 let g:airline#extensions#tabline#enabled = 1
 "let g:airline_left_sep = '▶'
 "let g:airline_left_alt_sep = '❯'
@@ -821,14 +906,14 @@ endfunction
 
 let g:Lf_Extensions = get(g:, 'Lf_Extensions', {})
 let g:Lf_Extensions.task = {
-			\ 'source': string(function('s:lf_task_source'))[10:-3],
-			\ 'accept': string(function('s:lf_task_accept'))[10:-3],
-			\ 'get_digest': string(function('s:lf_task_digest'))[10:-3],
-			\ 'highlights_def': {
-			\     'Lf_hl_funcScope': '^\S\+',
-			\     'Lf_hl_funcDirname': '^\S\+\s*\zs<.*>\ze\s*:',
-			\ },
-		\ }
+            \ 'source': string(function('s:lf_task_source'))[10:-3],
+            \ 'accept': string(function('s:lf_task_accept'))[10:-3],
+            \ 'get_digest': string(function('s:lf_task_digest'))[10:-3],
+            \ 'highlights_def': {
+            \     'Lf_hl_funcScope': '^\S\+',
+            \     'Lf_hl_funcDirname': '^\S\+\s*\zs<.*>\ze\s*:',
+            \ },
+            \ }
 
 " browser
 " use google chrome instaad of default broswer
@@ -879,7 +964,7 @@ let g:ale_lint_on_text_changed = 'normal'
 let g:ale_lint_on_insert_leave = 1
 let g:airline#extensions#ale#enabled = 1
 let g:ale_c_gcc_options = '-Wall -O2 -std=c99'
-let g:ale_cpp_gcc_options = '-Wall -O2 -std=c++14'
+let g:ale_cpp_gcc_options = '-Wall -O2 -std=c++17'
 let g:ale_c_cppcheck_options = ''
 let g:ale_cpp_cppcheck_options = ''
 " 使用clang对c和c++进行语法检查，对python使用pylint进行语法检查
@@ -890,14 +975,13 @@ let g:ale_linters = {
             \}
 
 " echodoc
-set noshowmode
-" let g:echodoc#type = "echo" " Default value
-" let g:echodoc_enable_at_startup = 1
-let g:echodoc#enable_at_startup = 1
-let g:echodoc#type = 'popup'
-" set cmdheight=1
-highlight link EchoDocPopup Pmenu
-
+" set noshowmode
+" " let g:echodoc#type = "echo" " Default value
+" " let g:echodoc_enable_at_startup = 1
+" let g:echodoc#enable_at_startup = 1
+" let g:echodoc#type = 'popup'
+" " set cmdheight=1
+" highlight link EchoDocPopup Pmenu
 
 " LeaderF
 let g:Lf_HideHelp = 1
@@ -1079,6 +1163,8 @@ nnoremap <leader>os  :<C-u>CocList -I symbols<cr>
 nnoremap <leader>ot  :<C-u>CocList tags<cr>
 " files
 nnoremap <leader>os  :<C-u>CocList files<cr>
+" colors
+nnoremap <leader>oc :<C-u>CocList colors<CR>
 
 augroup mygroup
   autocmd!
@@ -1093,76 +1179,3 @@ augroup end
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 " Apply AutoFix to problem on the current line.
 nmap <leader>.  <Plug>(coc-fix-current)
-
-" expend
-" escalt.vim    控制台下让用 <M-x> 也可用
-" Author:       lilydjwg <lilydjwg@gmail.com>
-" ---------------------------------------------------------------------
-" Load Once:
-if &cp || exists("g:loaded_escalt") || has("gui_running") || has("win32") || has("win64")
-  finish
-endif
-let s:keepcpo = &cpo
-let g:loaded_escalt = 1
-set cpo&vim
-" ---------------------------------------------------------------------
-" Functions:
-function Escalt_console()
-  for i in range(48, 57) + range(65, 90) + range(97, 122)
-    exe "set <M-".nr2char(i).">=\<Esc>".nr2char(i)
-  endfor
-  " 10, 22, 34, 62, 124 can't be set
-  set <M-,>=,
-  set <M-.>=.
-  set ttimeoutlen=50
-  " xterm keys, may also work in tmux with xterm-keys on
-  set <F1>=OP
-  set <F2>=OQ
-  set <F3>=OR
-  set <F4>=OS
-  set <Home>=OH
-  set <End>=OF
-  set <S-Delete>=[3;2~
-  if exists("$TMUX")
-    set <S-F1>=[1;2P
-    set <S-F2>=[1;2Q
-    set <S-F3>=[1;2R
-    set <S-F4>=[1;2S
-    set <S-F5>=[15;2~
-    set <S-F6>=[17;2~
-    set <S-F7>=[18;2~
-    set <S-F8>=[19;2~
-    set <S-F9>=[20;2~
-    set <S-F10>=[21;2~
-    set <S-F11>=[23;2~
-    set <S-F12>=[24;2~
-    set <Home>=[1~
-    set <End>=[4~
-    " In xterm and tmux
-    " 2 & 3 are Ins and Del, 5 & 6 are PgUp and PgDn
-  elseif &term == 'linux'
-    " Linux console keys, only S-F3 & S-F5 actually works
-    " set <S-F1>=[25~
-    " set <S-F2>=[26~
-    set <S-F3>=[28~
-    " set <S-F4>=[29~
-    set <S-F5>=[31~
-    " set <S-F6>=[32~
-    " set <S-F7>=[33~
-    " set <S-F8>=[34~
-  else
-    set <S-F1>=O1;2P
-    set <S-F2>=O1;2Q
-    set <S-F3>=O1;2R
-    set <S-F4>=O1;2S
-  endif
-endfunction
-" ---------------------------------------------------------------------
-" Call Functions:
-if !has('nvim')
-  call Escalt_console()
-endif
-" ---------------------------------------------------------------------
-" Restoration And Modelines:
-let &cpo= s:keepcpo
-unlet s:keepcpo
