@@ -53,6 +53,7 @@ Plug 'universal-ctags/ctags'
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'dense-analysis/ale'
 Plug 'Shougo/echodoc.vim'
+Plug 'mhinz/vim-crates'
 
 " ~/.wakkatime.cfg
 Plug 'wakatime/vim-wakatime'

@@ -3,8 +3,9 @@
 command:cpp=g++ -std=c++14 -Wall -O4 "$(VIM_FILEPATH)" -o "$(VIM_PATHNOEXT)"
 command:c=gcc -O2 -Wall "$(VIM_FILEPATH)" -o "$(VIM_PATHNOEXT)" -lstdc++ -lm -msse3
 command:go=go build -o "$(VIM_PATHNOEXT)" "$(VIM_FILEPATH)"
-command:make=make -f "$(VIM_FILEPATH)"
-cwd=$(VIM_FILEDIR)
+; command:make=make -f "$(VIM_FILEPATH)"
+command:rust=cargo build
+cwd=$(VIM_FILEDIR) 
 output=quickfix
 errorformat=%f:%l:%m
 save=2
@@ -27,6 +28,7 @@ command:sh=sh "$(VIM_FILENAME)"
 command:lua=lua "$(VIM_FILENAME)"
 command:perl=perl "$(VIM_FILENAME)"
 command:ruby=ruby "$(VIM_FILENAME)"
+command:rust=cargo run
 output=quickfix
 cwd=$(VIM_FILEDIR)
 
@@ -40,31 +42,48 @@ command=rm -f "$(VIM_FILEDIR)/$(VIM_FILENOEXT)"
 output=terminal
 
 [cmake-file-build]
-command:c,cpp=cmake -B "$(VIM_ROOT)/build/" .
+command=cmake -B "$(VIM_ROOT)/build"
+command:c,cpp,cmake,make=cmake -B "$(VIM_ROOT)/build"
 output=quickfix
 cwd=$(VIM_ROOT)
 save=2
 
 [make-file-build]
-command:c,cpp=make -j8 -C "$(VIM_ROOT)/build/"
+command=make -j8 -C "$(VIM_ROOT)/build/"
+command:c,cpp,cmake,make=make -j8 -C "$(VIM_ROOT)/build/"
 output=quickfix
 cwd=$(VIM_ROOT)
 save=2
 
 [make-file-build-debug]
-command:c,cpp=make -j8 -C "$(VIM_ROOT)/build/" "$(VIM_FILENOEXT)"
+command=make -j8 -C "$(VIM_ROOT)/build/" "$(VIM_FILENOEXT)"
+command:c,cpp,cmake,make=make -j8 -C "$(VIM_ROOT)/build/" "$(VIM_FILENOEXT)"
 output=quickfix
 cwd=$(VIM_ROOT)
 save=2
 
 [make-file-test]
-command:c,cpp=make -j8 -C "$(VIM_ROOT)/build/" test
+command=make -j8 -C "$(VIM_ROOT)/build/" test
+command:c,cpp,cmake,make=make -j8 -C "$(VIM_ROOT)/build/" test
 output=quickfix
 cwd=$(VIM_ROOT)
 
 [make-file-clean]
-command:c,cpp=make -j8 -C "$(VIM_ROOT)/build/" clean
+command=make -j8 -C "$(VIM_ROOT)/build/" clean
+command:c,cpp,cmake,make=make -j8 -C "$(VIM_ROOT)/build/" clean
 output=quickfix
+cwd=$(VIM_ROOT)
+
+[make-run-program]
+command=make -C "$(VIM_ROOT)/build/" $(?which_program)
+command:c,cpp=make -C "$(VIM_ROOT)/build/" $(VIM_FILENOEXT)
+output=terminal
+cwd=$(VIM_ROOT)
+
+[make-run-program-is]
+command=make -C "$(VIM_ROOT)/build/" $(?which_program)
+command:c,cpp,cmake,make=make -C "$(VIM_ROOT)/build/" $(?which_program)
+output=terminal
 cwd=$(VIM_ROOT)
 
 # ctags
@@ -129,22 +148,23 @@ output=quickfix
 command=netstat -tunl | grep $(?port)
 output=quickfix
 
-# normal
-[arch-install]
-command=sudo pacman -S --needed --noconfirm $(?software)
-output=terminal
-
 # doc-search
 [cpp-find-sysetm-label]
-command=echo $(?PWD !Warn) | sudo -S grep -Rn --color=auto --include="*.h" --include="*.c" --include="*.cc" --include="*.inc" '$(?search-label)' /usr
+command:c,cpp=echo $(?PWD !Warn) | sudo -S grep -Rn --color=auto --include="*.h" --include="*.c" --include="*.cc" --include="*.inc" '$(?search-label)' /usr
 output=quickfix
 
-# git clone
+[cpp-references-search]
+command:c,cpp=cppman $(VIM_CWORD)
+output=terminal
+
+[cpp-references]
+command:c,cpp=cppman $(?Search)
+output=terminal
+
 [git-clone]
 command=git clone -b master --depth=1 $(?url)
 output=terminal
 
-# fzf
 [fzf]
 command=fzf --preview '[[ $(file --mime {}) =~ binary ]] && echo {} is a binary file || (bat --style=numbers --color=always {} || highlight -O ansi -l {} || coderay {} || rougify {} || cat {}) 2> /dev/null | head -500'
 output=terminal
@@ -153,3 +173,73 @@ output=terminal
 [color]
 command=awk 'BEGIN{ s="/\\/\\/\\/\\/\\"; s=s s s s s s s s; for (colnum = 0; colnum<77; colnum++) { r = 255-(colnum*255/76); g = (colnum*510/76); b = (colnum*255/76); if (g>255) g = 510-g; printf "\033[48;2;%d;%d;%dm", r,g,b; printf "\033[38;2;%d;%d;%dm", 255-r,255-g,255-b; printf "%s\033[0m", substr(s,colnum+1,1); } printf "\n"; }'
 output=terminal
+
+# normal
+[arch-install]
+command=yay -S --needed --noconfirm $(?software)
+output=terminal
+
+[pacman-update]
+command=yay --noconfirm --needed -Syyu
+output=terminal
+
+[system-log]
+command=echo $(?PWD !Warn) | sudo -S dmesg | bat
+output=terminal
+
+[system-load]
+command=vmstat $(?delay_between_update) -t
+output=terminal
+
+[system-cpu]
+command=mpstat -P ALL $(?delay) $(?times)
+output=terminal
+
+[system-pid-single]
+command=pidstat -p $(?PID) $(?delay) $(?times)
+output=terminal
+
+[system-pid-all]
+command=pidstat $(?delay) $(?times)
+output=terminal
+
+[system-io]
+command=iostat -xz $(?delay) $(?times)
+output=terminal
+
+# sar net: DEV/NFS/NFSD/SOCK/IP/ICMP/TCP/UDP/SOFT/FC[6/E]
+[system-network-throughput]
+command=sar -n $(?interface: DEV) $(?delay)
+output=terminal
+
+# docker
+[docker-create]
+command=docker run -it -p $(?tip:tpo:tpo) -p $(?uip:upo:upo)/udp --name $(?container_name) $(?images: ichheit-deb:9.1-deb) /bin/bash
+output=terminal
+
+[docker-start]
+command=docker start -i $(?container)
+output=terminal
+
+[docker-commit]
+command=docker commit $(?from_container) $(?to_image) && docker images
+output=quickfix
+
+[docker-delete]
+command=docker rm -f $(?container) && echo deleted
+output=quickfix
+
+# fcitx
+[restart-fcitx]
+command=killall fcitx && killall sogou-qimpanel && sleep 1 && fcitx &
+output=quickfix
+
+[nnn]
+command=nnn
+output=terminal
+cwd=$(VIM_FILEDIR) 
+
+[show-difference]
+command=diff -u --color=always $(?first_file) $(?second_file) | bat
+output=terminal
+cow=$(VIM_FILEDIR)

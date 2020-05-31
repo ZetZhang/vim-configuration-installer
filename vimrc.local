@@ -378,6 +378,19 @@ endfunc
 set tabline=%!Vim_NeatTabLine()
 
 " PlugInstall ------------------------------------
+" read pdf
+" :command! -complete=file -nargs=1 Rpdf :r !pdftotext -nopgbrk <q-args> -
+" :command! -complete=file -nargs=1 Rpdf :r !pdftotext -nopgbrk <q-args> - |fmt -csw78
+
+" rust crate hinting
+highlight Crates ctermfg=green ctermbg=NONE cterm=NONE
+" or link it to another highlight group
+highlight link Crates WarningMsg
+" Automatically run :CratesToggle when opening a Cargo.toml file
+if has('nvim')
+  autocmd BufRead Cargo.toml call crates#toggle()
+endif
+
 " vimspector
 " let g:vimspector_enable_mappings = 'HUMAN'
 
@@ -839,6 +852,10 @@ nnoremap <Leader>mca :AsyncTask make-file-build<CR>
 nnoremap <Leader>mcb :AsyncTask make-file-build-debug<CR>
 nnoremap <Leader>mct :AsyncTask make-file-test<CR>
 nnoremap <Leader>mcd :AsyncTask make-file-clean<CR>
+" make运行当前文件程序
+nnoremap <Leader>mcr :AsyncTask make-run-program<CR>
+" make运行某个可执行程序
+nnoremap <Leader>mcrr :AsyncTask make-run-program-is<CR>
 
 " AsyncTask
 " quickfix、vim、tab、top、bottom、left、right、external
