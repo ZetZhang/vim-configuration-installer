@@ -207,6 +207,10 @@ output=terminal
 command=iostat -xz $(?delay) $(?times)
 output=terminal
 
+[system-vm]
+command=vmstat -t $(?delay) $(?times)
+output=terminal
+
 # sar net: DEV/NFS/NFSD/SOCK/IP/ICMP/TCP/UDP/SOFT/FC[6/E]
 [system-network-throughput]
 command=sar -n $(?interface: DEV) $(?delay)
@@ -243,3 +247,39 @@ cwd=$(VIM_FILEDIR)
 command=diff -u --color=always $(?first_file) $(?second_file) | bat
 output=terminal
 cow=$(VIM_FILEDIR)
+
+[compress-zstd]
+command=CZFILE=$(?file); tar -I 'zstd -z -T0 --ultra -$(?compress-level:19) -v --priority=rt' -cvf "${CZFILE}.tar.zst" $CZFILE
+output=terminal
+
+[uncompress-zstd]
+command=tar -I 'zstd -d -v -T0' -xvf $(?file)
+output=terminal
+
+[compress-lz4]
+command=CLFILE=$(?file); tar -I 'lz4 -z -$(?compression-level:9) -v' -cvf "${CLFILE}.tar.lz4" $CLFILE
+output=terminal
+
+[uncompress-lz4]
+command=tar -I 'lz4 -d -v' -xvf $(?file)
+output=terminal
+
+[clang-IR]
+command=clang -c -S -emit-llvm $(?cfile)
+output=terminal
+
+[clang-eBPF]
+command=clang -c -S -target bpf $(?cfile)
+output=terminal
+
+[clang-eBPF-bytecode]
+command=clang -c -target bpf $(?cobject)
+output=terminal
+
+[ssl-or-tsl-access-server]
+command=openssl s_client -connect $(?Server:outlook.office365.com):$(?Port:993)
+output=terminal
+
+[ssl-or-tsl-access-server2]
+command=gnutls-cli --port $(?Port:993) $(?Server:outlook.office365.com)
+output=terminal

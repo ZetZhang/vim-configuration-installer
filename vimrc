@@ -66,6 +66,8 @@ Plug 'weirongxu/plantuml-previewer.vim'
 Plug 'tyru/open-browser.vim'
 " Plug 'scrooloose/vim-slumlord'
 Plug 'previm/previm'
+Plug 'mzlogin/vim-markdown-toc'
+Plug 'plasticboy/vim-markdown'
 if has('nvim')
     Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
 else
@@ -78,6 +80,9 @@ Plug 'cespare/vim-toml'
 Plug 'terryma/vim-expand-region'
 Plug 'cpiger/neodebug'
 Plug 'puremourning/vimspector'
+
+Plug 'jceb/vim-orgmode'
+Plug 'mattn/calendar-vim'
 
 "Plug 'ervandew/supertab'
 Plug 'mbbill/undotree'

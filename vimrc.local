@@ -1,6 +1,7 @@
 " General
 filetype plugin indent on   " Automatically detect file types.
 syntax on                   " Syntax highlighting
+syntax sync minlines=300
 set mouse=a                 " Automatically enable mouse usage
 set mousehide               " Hide the mouse cursor while typing
 set encoding=utf-8
@@ -377,10 +378,21 @@ endfunc
 " setup new tabline, just like %M%t in macvim
 set tabline=%!Vim_NeatTabLine()
 
+" let g:python_host_skip_check=1
+" let g:python_host_prog = '/usr/local/bin/python'
+" let g:python3_host_skip_check=1
+" let g:python3_host_prog = '/usr/local/bin/python3'
+
 " PlugInstall ------------------------------------
 " read pdf
 " :command! -complete=file -nargs=1 Rpdf :r !pdftotext -nopgbrk <q-args> -
 " :command! -complete=file -nargs=1 Rpdf :r !pdftotext -nopgbrk <q-args> - |fmt -csw78
+
+" vim-org-mode
+packloadall
+silent! helptags ALL
+let g:org_heading_shade_leading_stars=0
+let g:org_indent=4
 
 " rust crate hinting
 highlight Crates ctermfg=green ctermbg=NONE cterm=NONE
@@ -463,6 +475,13 @@ nmap <Leader>sr cs
 " di与ds
 " i模式下<C-S>a[rb]：添加b
 " v模式下S可以替换
+
+" vim-markdown
+let g:vim_markdown_math = 1
+noremap <Leader>ug :GenTocMarked<CR>
+
+" markdown-toc
+let g:vmt_auto_update_on_save = 1
 
 " markdown-preview
 if has('nvim')
