@@ -384,6 +384,9 @@ set tabline=%!Vim_NeatTabLine()
 " let g:python3_host_prog = '/usr/local/bin/python3'
 
 " PlugInstall ------------------------------------
+" vim-aliternator
+noremap <F4> :Alternate<CR>
+
 " read pdf
 " :command! -complete=file -nargs=1 Rpdf :r !pdftotext -nopgbrk <q-args> -
 " :command! -complete=file -nargs=1 Rpdf :r !pdftotext -nopgbrk <q-args> - |fmt -csw78
@@ -585,19 +588,6 @@ let g:startify_custom_footer = [
             \]
 noremap <F7> :Startify<CR>
 
-" indent-guides
-let g:indent_guides_enable_on_vim_startup=1
-let g:indent_guides_start_level=2
-let g:indent_guides_guide_size=1
-nmap <Leader>i <Plug>IndentGuidesToggle
-let g:indent_guides_auto_colors = 0
-autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=red   ctermbg=2
-autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=green ctermbg=6
-let g:indent_guides_indent_levels = 100
-" let g:indent_guides_color_change_percent = 10
-let g:indent_guides_guide_size = 1
-" let g:indent_guides_exclude_filetypes = ['help', 'nerdtree']
-
 " Sessionman
 let sessionman_save_on_exit = 1
 set sessionoptions=blank,buffers,curdir,folds,tabpages,winsize
@@ -795,6 +785,19 @@ let g:airline_right_alt_sep = ''
 let g:airline_symbols.branch = ''
 let g:airline_symbols.readonly = ''
 let g:airline_symbols.linenr = ''
+
+" indent-guides
+let g:indent_guides_enable_on_vim_startup=1
+let g:indent_guides_start_level=2
+let g:indent_guides_guide_size=1
+nmap <Leader>i <Plug>IndentGuidesToggle
+let g:indent_guides_auto_colors = 0
+autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=#8e3d31 ctermbg=100
+autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#ae6321 ctermbg=6
+let g:indent_guides_indent_levels = 100
+" let g:indent_guides_color_change_percent = 10
+let g:indent_guides_guide_size = 1
+" let g:indent_guides_exclude_filetypes = ['help', 'nerdtree']
 
 " SnipMate
 let g:snipMate = get(g:, 'snipMate', {}) " Allow for vimrc re-sourcing
@@ -1051,7 +1054,7 @@ noremap <C-F> :<C-U><C-R>=printf("Leaderf! rg -e %s ", expand("<cword>"))<CR><CR
 noremap <F5> :<C-U><C-R>=printf("Leaderf --nowrap --popup %s", "task")<CR><CR>
 
 " defx
-map <M-w> :Defx<CR>
+map <M-w> :Defx -search=`expand('%:p')` -toggle<CR>
 call defx#custom#option('_', {
       \ 'winwidth': 50,
       \ 'split': 'floating',

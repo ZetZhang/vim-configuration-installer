@@ -83,6 +83,11 @@ Plug 'puremourning/vimspector'
 
 Plug 'jceb/vim-orgmode'
 Plug 'mattn/calendar-vim'
+" Qt
+Plug 'peterhoeg/vim-qml'
+
+"C++ switcher
+Plug 'mark2185/vim-alternator'
 
 "Plug 'ervandew/supertab'
 Plug 'mbbill/undotree'
