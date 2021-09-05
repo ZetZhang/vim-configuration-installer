@@ -115,6 +115,11 @@ output=quickfix
 cwd=$(VIM_FILEDIR)
 save=2
 
+# lsof
+[search-pid-by-port]
+command=echo $(?PWD !Warn) | sudo lsof -i :$(?pid:12306)
+output=command
+
 # tcpdump
 [tcpdump-listen]
 command=echo $(?PWD !Warn) | sudo -S tcpdump -ntv -i $(?interface:lo) -nn -vvv -X tcp and port $(?port)
@@ -211,6 +216,10 @@ output=terminal
 command=vmstat -t $(?delay) $(?times)
 output=terminal
 
+[system-battery-devices]
+command=for i in /sys/class/hwmon/hwmon*/temp*_input; do echo "$(<$(dirname $i)/name): $(cat ${i%_*}_label 2>/dev/null || echo $(basename ${i%_*})) $(readlink -f $i)"; done | grep k10temp
+output=terminal
+
 # sar net: DEV/NFS/NFSD/SOCK/IP/ICMP/TCP/UDP/SOFT/FC[6/E]
 [system-network-throughput]
 command=sar -n $(?interface: DEV) $(?delay)
@@ -282,4 +291,28 @@ output=terminal
 
 [ssl-or-tsl-access-server2]
 command=gnutls-cli --port $(?Port:993) $(?Server:outlook.office365.com)
+output=terminal
+
+[edit-file-in-tmux-session-by-vim]
+command=tmux send-keys -t $(?Tmux-session:Ichheit) Escape ':tabedit $(VIM_FILEDIR)/$(?filename)' Enter
+output=quickfix
+
+[edit-file-bymyself-in-tmux-session-by-vim]
+command=tmux send-keys -t $(?Tmux-session:Ichheit) Escape ':tabedit $(VIM_FILEPATH)' Enter
+output=quickfix
+
+[edit-file-from-terminal-by-vim-to-tmux]
+command=tmux send-keys -t $(?Tmux-session) Escape ':tabedit `pwd`/$(?filename)' Enter
+output=terminal
+
+[curl-download-file]
+command=curl -# -o $(?target_filename) $(?source_url)
+output=terminal
+
+[check-weather]
+command=ansiweather -l $(?location:Guangzhou),CN -u metric -a false -s true -i true -w true -h true -p true -d true -f $(?offset:0)
+output=quickfix
+
+[check-weather-terminal]
+command=ansiweather -l $(?location:Guangzhou),CN -u metric -a true -s true -i true -w true -h true -p true -d true -f $(?offset:0)
 output=terminal
