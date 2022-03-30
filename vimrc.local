@@ -314,76 +314,40 @@ let g:ruby_host_prog = '/usr/bin/ruby'
 " open folder
 noremap <F8> :! dolphin . &<CR><CR>
 
-" make tabline in terminal mode
-function! Vim_NeatTabLine()
-    let s = ''
-    for i in range(tabpagenr('$'))
-        " select the highlighting
-        if i + 1 == tabpagenr()
-            let s .= '%#TabLineSel#'
-        else
-            let s .= '%#TabLine#'
-        endif
-        " set the tab page number (for mouse clicks)
-        let s .= '%' . (i + 1) . 'T'
-        " the label is made by MyTabLabel()
-        let s .= ' %{Vim_NeatTabLabel(' . (i + 1) . ')} '
-    endfor
-    " after the last tab fill with TabLineFill and reset tab page nr
-    let s .= '%#TabLineFill#%T'
-    " right-align the label to close the current tab page
-    if tabpagenr('$') > 1
-        let s .= '%=%#TabLine#%999XX'
-    endif
-    return s
-endfunc
- 
-" get a single tab name 
-function! Vim_NeatBuffer(bufnr, fullname)
-    let l:name = bufname(a:bufnr)
-    if getbufvar(a:bufnr, '&modifiable')
-        if l:name == ''
-            return '[No Name]'
-        else
-            if a:fullname 
-                return fnamemodify(l:name, ':p')
-            else
-                return fnamemodify(l:name, ':t')
-            endif
-        endif
-    else
-        let l:buftype = getbufvar(a:bufnr, '&buftype')
-        if l:buftype == 'quickfix'
-            return '[Quickfix]'
-        elseif l:name != ''
-            if a:fullname 
-                return '-'.fnamemodify(l:name, ':p')
-            else
-                return '-'.fnamemodify(l:name, ':t')
-            endif
-        else
-        endif
-        return '[No Name]'
-    endif
-endfunc
- 
-" get a single tab label
-function! Vim_NeatTabLabel(n)
-    let l:buflist = tabpagebuflist(a:n)
-    let l:winnr = tabpagewinnr(a:n)
-    let l:bufnr = l:buflist[l:winnr - 1]
-    return Vim_NeatBuffer(l:bufnr, 0)
-endfunc
-
-" setup new tabline, just like %M%t in macvim
-set tabline=%!Vim_NeatTabLine()
-
 " let g:python_host_skip_check=1
 " let g:python_host_prog = '/usr/local/bin/python'
 " let g:python3_host_skip_check=1
 " let g:python3_host_prog = '/usr/local/bin/python3'
 
 " PlugInstall ------------------------------------
+" calendar
+let g:calendar_google_calendar = 1
+let g:calendar_google_task = 1
+
+" rnvimr
+tnoremap <silent> <M-i> <C-\><C-n>:RnvimrResize<CR>
+tnoremap <silent> <M-l> <C-\><C-n>:RnvimrResize 1,8,9,11,5<CR>
+nnoremap <silent> <M-o> :RnvimrToggle<CR>
+tnoremap <silent> <M-o> <C-\><C-n>:RnvimrToggle<CR>
+" Make Ranger replace Netrw and be the file explorer
+let g:rnvimr_enable_ex = 1
+" Make Ranger to be hidden after picking a file
+let g:rnvimr_enable_picker = 0
+" Disable a border for floating window
+let g:rnvimr_draw_border = 0
+" Hide the files included in gitignore
+let g:rnvimr_hide_gitignore = 1
+" Change the border's color
+" let g:rnvimr_border_attr = {'fg': 14, 'bg': -1}
+" " Make Neovim wipe the buffers corresponding to the files deleted by Ranger
+let g:rnvimr_enable_bw = 1
+" Add a shadow window, value is equal to 100 will disable shadow
+let g:rnvimr_shadow_winblend = 70
+" Draw border with both
+let g:rnvimr_ranger_cmd = 'ranger --cmd="set draw_borders both"'
+" Link CursorLine into RnvimrNormal highlight in the Floating window
+" highlight link RnvimrNormal CursorLine
+
 " vim-aliternator
 noremap <F4> :Alternate<CR>
 
@@ -649,7 +613,7 @@ let g:NERDTreeIndicatorMapCustom = {
 " autoformat
 noremap <F6> :Autoformat<CR>
 let g:autoformat_verbosemode = 1
-set fo=aw2tq
+" set fo=aw2tq 垃圾配置
 " "g:formatdef_clangformat
 
 " nerdcommenter
@@ -760,6 +724,7 @@ endif
 set t_Co=256
 let g:airline_theme="dark"
 let g:airline#extensions#tabline#enabled = 1
+let g:airline_skip_empty_sections = 1
 "let g:airline_left_sep = '▶'
 "let g:airline_left_alt_sep = '❯'
 "let g:airline_right_sep = '◀'

@@ -85,10 +85,22 @@ Plug 'jceb/vim-orgmode'
 Plug 'mattn/calendar-vim'
 " Qt
 Plug 'peterhoeg/vim-qml'
-
 "C++ switcher
 Plug 'mark2185/vim-alternator'
-
+" table
+Plug 'dhruvasagar/vim-table-mode'
+" tabline
+" Plug 'mg979/vim-xtabline'
+" ranger
+Plug 'kevinhwang91/rnvimr'
+" visual-multi
+Plug 'mg979/vim-visual-multi', {'branch': 'master'}
+" calendar
+Plug 'itchyny/calendar.vim'
+" xmake
+" Plug 'luzhlon/xmake.vim'
+" Plug 'luzhlon/x.vim'
+" Plug 'luzhlon/qrun.vim'
 "Plug 'ervandew/supertab'
 Plug 'mbbill/undotree'
 Plug 'tpope/vim-surround'

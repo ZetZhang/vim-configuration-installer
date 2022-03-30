@@ -4,7 +4,7 @@ command:cpp=g++ -std=c++14 -Wall -O4 "$(VIM_FILEPATH)" -o "$(VIM_PATHNOEXT)"
 command:c=gcc -O2 -Wall "$(VIM_FILEPATH)" -o "$(VIM_PATHNOEXT)" -lstdc++ -lm -msse3
 command:go=go build -o "$(VIM_PATHNOEXT)" "$(VIM_FILEPATH)"
 ; command:make=make -f "$(VIM_FILEPATH)"
-command:rust=cargo build
+command:rust=rustc "$(VIM_FILEPATH)" -o "$(VIM_PATHNOEXT)"
 cwd=$(VIM_FILEDIR) 
 output=quickfix
 errorformat=%f:%l:%m
@@ -28,7 +28,7 @@ command:sh=sh "$(VIM_FILENAME)"
 command:lua=lua "$(VIM_FILENAME)"
 command:perl=perl "$(VIM_FILENAME)"
 command:ruby=ruby "$(VIM_FILENAME)"
-command:rust=cargo run
+command:rust="$(VIM_PATHNOEXT)"
 output=quickfix
 cwd=$(VIM_FILEDIR)
 
@@ -44,6 +44,7 @@ output=terminal
 [cmake-file-build]
 command=cmake -B "$(VIM_ROOT)/build"
 command:c,cpp,cmake,make=cmake -B "$(VIM_ROOT)/build"
+command:rust=cargo build
 output=quickfix
 cwd=$(VIM_ROOT)
 save=2
@@ -51,6 +52,7 @@ save=2
 [make-file-build]
 command=make -j8 -C "$(VIM_ROOT)/build/"
 command:c,cpp,cmake,make=make -j8 -C "$(VIM_ROOT)/build/"
+command:rust=cargo build
 output=quickfix
 cwd=$(VIM_ROOT)
 save=2
@@ -58,6 +60,7 @@ save=2
 [make-file-build-debug]
 command=make -j8 -C "$(VIM_ROOT)/build/" "$(VIM_FILENOEXT)"
 command:c,cpp,cmake,make=make -j8 -C "$(VIM_ROOT)/build/" "$(VIM_FILENOEXT)"
+command:rust=cargo build
 output=quickfix
 cwd=$(VIM_ROOT)
 save=2
@@ -65,18 +68,21 @@ save=2
 [make-file-test]
 command=make -j8 -C "$(VIM_ROOT)/build/" test
 command:c,cpp,cmake,make=make -j8 -C "$(VIM_ROOT)/build/" test
+command:rust=cargo test -- --test-threads=1
 output=quickfix
 cwd=$(VIM_ROOT)
 
 [make-file-clean]
 command=make -j8 -C "$(VIM_ROOT)/build/" clean
 command:c,cpp,cmake,make=make -j8 -C "$(VIM_ROOT)/build/" clean
+command:rust=cargo clean
 output=quickfix
 cwd=$(VIM_ROOT)
 
 [make-run-program]
 command=make -C "$(VIM_ROOT)/build/" $(?which_program)
 command:c,cpp=make -C "$(VIM_ROOT)/build/" $(VIM_FILENOEXT)
+command:rust=cargo run --release
 output=terminal
 cwd=$(VIM_ROOT)
 
@@ -85,6 +91,11 @@ command=make -C "$(VIM_ROOT)/build/" $(?which_program)
 command:c,cpp,cmake,make=make -C "$(VIM_ROOT)/build/" $(?which_program)
 output=terminal
 cwd=$(VIM_ROOT)
+
+[make-doc-open]
+command:rust=cargo doc --open
+output=quickfix
+cmd=$(VIM_ROOT)
 
 # ctags
 [ctags-update]
@@ -154,7 +165,7 @@ command=netstat -tunl | grep $(?port)
 output=quickfix
 
 # doc-search
-[cpp-find-sysetm-label]
+[cpp-find-system-label]
 command:c,cpp=echo $(?PWD !Warn) | sudo -S grep -Rn --color=auto --include="*.h" --include="*.c" --include="*.cc" --include="*.inc" '$(?search-label)' /usr
 output=quickfix
 
@@ -198,6 +209,10 @@ output=terminal
 
 [system-cpu]
 command=mpstat -P ALL $(?delay) $(?times)
+output=terminal
+
+[system-cpu-MHz]
+command=watch grep \"cpu MHz\" /proc/cpuinfo
 output=terminal
 
 [system-pid-single]
